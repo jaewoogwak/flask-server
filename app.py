@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-address = ''
+address = '127.0.0.1:5000'
 
 
 @app.route('/')
