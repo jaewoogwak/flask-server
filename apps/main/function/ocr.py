@@ -58,7 +58,7 @@ def OCRPDF(pdf_content):
     texts = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
         # 각 이미지에 대해 ocr_image 함수를 병렬로 실행
-        results = list(executor.map(ocr_image_PpmImageFile, images))
+        results = list(executor.map(OCRImage_PpmImageFile, images))
     
     texts.extend(results)
     return " ".join(texts)
