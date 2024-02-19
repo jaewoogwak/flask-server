@@ -1,3 +1,7 @@
+# OMP: Error #15: Initializing libiomp5md.dll 문제 해결을 위한 환경 변수 설정
+# 코드의 맨 위에 있어야함
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 # Flask 서버 실행 코드
 from flask import Flask, jsonify
 from flask_cors import CORS
