@@ -110,5 +110,5 @@ answers = [
 generate_pdf(questions, choices)
 generate_pdf_with_answers(questions, choices, answers)
 
-remove_pdf('연습문제_정답없음.pdf')
-remove_pdf('연습문제_정답포함.pdf')
+#remove_pdf('연습문제_정답없음.pdf')
+#remove_pdf('연습문제_정답포함.pdf')
