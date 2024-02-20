@@ -171,3 +171,6 @@ cython_debug/
 
 ### MAC OS ###
 .DS_Store
+
+### secret key ###
+serious-conduit-413006-58f255767a58.json
