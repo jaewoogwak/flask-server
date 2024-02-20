@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify, send_file
 from ..main.function.ocr import OCRImage_Byte, OCRImages_Byte, OCRPDF
 from ..main.function.langchain import request_prompt
 from ..main.function.pdf_processing import generate_pdf
-from PIL import Image  
+from PIL import Image
 import io
 import re
 import os
@@ -39,7 +39,8 @@ def UploadImages():
     if not files or any(file.filename == '' for file in files):
         return 'No selected files', 400
 
-    images = [Image.open(io.BytesIO(file.read())) for file in files]
+    # 파일을 바이트 컨텐츠로 변환
+    images = [file.read() for file in files]
     
     # 이미지 OCR 처리
     texts = OCRImages_Byte(images)

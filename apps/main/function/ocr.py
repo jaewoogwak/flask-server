@@ -35,6 +35,9 @@ def OCRImage_Byte(image_content):
     else:
         return "No text found"
 
+from google.cloud import vision
+import concurrent.futures
+
 def OCRImages_Byte(images_content):
     """
     여러 이미지 파일의 내용에서 텍스트를 추출합니다.
@@ -59,6 +62,7 @@ def OCRImages_Byte(images_content):
         results = list(executor.map(ocr_image, images_content, clients))
 
     return results
+
 
 def OCRPDF(pdf_content):
     """
