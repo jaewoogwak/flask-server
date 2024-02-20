@@ -70,8 +70,11 @@ def create_pdf_from_html(html_content, output_file):
     HTML 내용으로부터 PDF 파일을 생성하는 함수
     """
     # wkhtmltopdf 설치 후 경로 입력 필요(windows에서만 생기는 문제, 본인 경로에 맞게 수정, 서버(linux)에 올리는 경우는 테스트 필요)
+    # Window 환경
     # config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+    # pdfkit.from_string(html_content, output_file, configuration=config)
     
+    # Mac 환경
     pdfkit.from_string(html_content, output_file)
 
 def remove_pdf(file_path):
