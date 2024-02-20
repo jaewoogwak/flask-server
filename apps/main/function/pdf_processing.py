@@ -1,5 +1,6 @@
 import pdfkit
 import os
+import re
 
 def generate_pdf(questions, choices, output_file='연습문제_정답없음.pdf'):
     """
@@ -44,35 +45,34 @@ def create_html_content(questions, choices, answers=None, include_answers=False)
 <body>
     <h1>연습문제</h1>
     '''
-    
+
     for idx, question in enumerate(questions, start=1):
         html_content += f'''
-    <div class="container">
-        <div class="question-header">문제 {idx}</div>
-        <div class="question-content">{question}</div>
-        <div class="options">
+        <div class="container">
+            <div class="question-header">문제 {idx}</div>
+            <div class="question-content">{question}</div>
+            <div class="options">{choices[idx-1]}</div>
+        </div>
         '''
-        for option_label, option_content in choices[idx-1].items():
-            html_content += f'<div class="option">{option_label}) {option_content}</div>'
-        html_content += '</div></div>'
-    
+
     if include_answers:
         html_content += '<div class="spacer"></div><div class="answers"><h2>정답</h2>'
         for idx, answer in enumerate(answers, start=1):
             html_content += f'<div class="answer-text">{idx}. 정답: {answer}</div>'
         html_content += '</div>'
-    
+
     html_content += '</body></html>'
     return html_content
+
 
 def create_pdf_from_html(html_content, output_file):
     """
     HTML 내용으로부터 PDF 파일을 생성하는 함수
     """
-    # wkhtmltopdf 설치 후 경로 입력 필요
-    config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
+    # wkhtmltopdf 설치 후 경로 입력 필요(windows에서만 생기는 문제, 본인 경로에 맞게 수정, 서버(linux)에 올리는 경우는 테스트 필요)
+    # config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')
     
-    pdfkit.from_string(html_content, output_file, configuration=config)
+    pdfkit.from_string(html_content, output_file)
 
 def remove_pdf(file_path):
     """
@@ -83,32 +83,3 @@ def remove_pdf(file_path):
         print(f"File {file_path} has been removed successfully.")
     except OSError as e:
         print(f"Error: {e.strerror} - {e.filename}")
-
-
-# 사용 예시
-questions = [
-    "다음 중 가장 큰 수는1?",
-    "다음 중 가장 큰 수는2?",
-    "다음 중 가장 큰 수는3?",
-    "다음 중 가장 큰 수는4?",
-]
-
-choices = [
-    {"A": "12", "B": "45", "C": "78", "D": "21"},
-    {"A": "22", "B": "45", "C": "78", "D": "21"},
-    {"A": "32", "B": "45", "C": "78", "D": "21"},
-    {"A": "42", "B": "45", "C": "78", "D": "21"},
-]
-
-answers = [
-    "A", 
-    "B",
-    "C",
-    "D",
-]
-
-generate_pdf(questions, choices)
-generate_pdf_with_answers(questions, choices, answers)
-
-#remove_pdf('연습문제_정답없음.pdf')
-#remove_pdf('연습문제_정답포함.pdf')
