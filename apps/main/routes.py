@@ -87,5 +87,4 @@ def UploadPDF():
         
         output_file = 'output.pdf'
         generate_pdf(questions, choices, output_file)
-        # return jsonify({'extracted_text': prompt_result})
         return send_file(output_file, as_attachment=True, download_name='custom_filename.pdf')

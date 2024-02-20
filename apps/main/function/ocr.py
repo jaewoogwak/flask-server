@@ -1,5 +1,4 @@
 import concurrent.futures
-import easyocr
 import pdf2image
 from PIL import Image
 import io
@@ -54,27 +53,46 @@ def OCRImages_Byte(images_content):
 
     return results
 
+# def OCRPDF(pdf_content):
+#     """
+#     PDF 파일의 내용에서 텍스트를 추출합니다.
+#     PDF의 내용을 이미지로 변환한 후 이미지에서 텍스트를 추출합니다.
+#     :param pdf_content: 텍스트를 추출할 PDF 파일의 내용 (bytes)
+#     :return: 추출된 텍스트
+#     """
+#     def ocr_image(image):
+#         client = vision.ImageAnnotatorClient()
+#         image_content = io.BytesIO()
+#         image.save(image_content, format='JPEG')
+#         image_content = image_content.getvalue()
+
+#         vision_image = vision.Image(content=image_content)
+#         response = client.text_detection(image=vision_image)
+#         texts = response.text_annotations
+#         return texts[0].description if texts else "No text found"
+
+#     images = pdf2image.convert_from_bytes(pdf_content)
+    
+#     with concurrent.futures.ThreadPoolExecutor() as executor:
+#         results = list(executor.map(ocr_image, images))
+
+#     return " ".join(results)
+
+def ocr_image(image, client):
+    image_content = io.BytesIO()
+    image.save(image_content, format='JPEG')
+    image_content = image_content.getvalue()
+
+    vision_image = vision.Image(content=image_content)
+    response = client.text_detection(image=vision_image)
+    texts = response.text_annotations
+    return texts[0].description if texts else "No text found"
+
 def OCRPDF(pdf_content):
-    """
-    PDF 파일의 내용에서 텍스트를 추출합니다.
-    PDF의 내용을 이미지로 변환한 후 이미지에서 텍스트를 추출합니다.
-    :param pdf_content: 텍스트를 추출할 PDF 파일의 내용 (bytes)
-    :return: 추출된 텍스트
-    """
-    def ocr_image(image):
-        client = vision.ImageAnnotatorClient()
-        image_content = io.BytesIO()
-        image.save(image_content, format='JPEG')
-        image_content = image_content.getvalue()
-
-        vision_image = vision.Image(content=image_content)
-        response = client.text_detection(image=vision_image)
-        texts = response.text_annotations
-        return texts[0].description if texts else "No text found"
-
     images = pdf2image.convert_from_bytes(pdf_content)
+    client = vision.ImageAnnotatorClient()
     
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        results = list(executor.map(ocr_image, images))
+        results = list(executor.map(ocr_image, images, [client]*len(images)))
 
     return " ".join(results)
