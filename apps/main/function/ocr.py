@@ -35,9 +35,6 @@ def OCRImage_Byte(image_content):
     else:
         return "No text found"
 
-from google.cloud import vision
-import concurrent.futures
-
 def OCRImages_Byte(images_content):
     """
     여러 이미지 파일의 내용에서 텍스트를 추출합니다.
@@ -52,16 +49,11 @@ def OCRImages_Byte(images_content):
         response = client.text_detection(image=image)
         texts = response.text_annotations
         return texts[0].description if texts else "No text found"
-
-    # ThreadPoolExecutor를 사용하여 이미지 별로 ocr_image 함수를 병렬 실행
-    # client 인스턴스를 ocr_image 함수의 인자로 전달
+    
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        # map 함수에 전달하기 위해 client 인스턴스를 images_content 길이만큼 반복하는 이터레이터 생성
-        clients = [client] * len(images_content)
-        # executor.map 호출 시 함수에 전달할 여러 인자를 처리하기 위해 zip을 사용
-        results = list(executor.map(ocr_image, images_content, clients))
+        results = list(executor.map(ocr_image, images_content, [client] * len(images_content)))
 
-    return results
+    return " ".join(results)
 
 
 def OCRPDF(pdf_content):
