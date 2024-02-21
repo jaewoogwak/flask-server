@@ -27,41 +27,57 @@ def create_html_content(questions, choices, answers=None, include_answers=False)
     HTML 내용을 생성하는 함수
     """
     html_content = '''
-<html>
-<head>
-    <title>연습문제</title>
-    <meta charset="UTF-8">
-    <style>
-        body { font-family: "Arial", sans-serif; margin: 40px; padding-top: 40px; background-color: #f9f9f9; color: #333; }
-        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        .question-header { color: #2a7ae2; margin-bottom: 10px; font-size: 20px; }
-        .question-content, .options { margin-bottom: 5px; font-size: 16px; }
-        .option { margin-left: 20px; }
-        .spacer { page-break-before: always; height: 40px; }
-        .answers { background-color: #fff; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .answer-text { background-color: #e7f3ff; padding: 10px; border-left: 4px solid #2a7ae2; margin-top: 10px; }
-    </style>
-</head>
-<body>
-    <h1>연습문제</h1>
+        <html>
+            <head>
+                <title>연습문제</title>
+                <meta charset="UTF-8">
+                <style>
+                    @page { margin: 40px; }
+                    body { font-family: "Arial", sans-serif; color: #333; }
+                    .container { padding: 20px; background-color: #f9f9f9; }
+                    .question { page-break-inside: avoid; }
+                    .blank { height: 20px; }
+                    .question-box { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+                    .question-header { color: #2a7ae2; margin-bottom: 10px; font-size: 20px; }
+                    .question-content, .options { margin-bottom: 5px; font-size: 16px; }
+                    .option { margin-left: 20px; }
+                    .spacer { page-break-before: always; height: 25px; }
+                    .answer { page-break-inside: avoid; }
+                    .answer-box { background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); page-break-inside: avoid;}
+                    .answer-text { background-color: #e7f3ff; padding: 10px; border-left: 4px solid #2a7ae2; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                <h1>연습문제</h1>
     '''
 
     for idx, question in enumerate(questions, start=1):
         html_content += f'''
-        <div class="container">
-            <div class="question-header">문제 {idx}</div>
-            <div class="question-content">{question}</div>
-            <div class="options">{choices[idx-1]}</div>
-        </div>
+            <div class="question">
+                <div class="blank"></div>
+                <div class="question-box">
+                    <div class="question-header">문제 {idx}</div>
+                    <div class="question-content">{question}</div>
+                    <div class="options">{choices[idx-1]}</div>
+                </div>
+            </div>
         '''
 
     if include_answers:
-        html_content += '<div class="spacer"></div><div class="answers"><h2>정답</h2>'
+        html_content += '<div class="spacer"></div><h1>정답</h1>'
         for idx, answer in enumerate(answers, start=1):
-            html_content += f'<div class="answer-text">{idx}. 정답: {answer}</div>'
+            html_content += f'''
+                <div class="answer">
+                    <div class="blank"></div>
+                    <div class="answer-box">
+                        <div class="answer-text">{idx}. 정답: {answer}</div>
+                    </div>
+                </div>
+            '''
         html_content += '</div>'
 
-    html_content += '</body></html>'
+    html_content += '</div></body></html>'
     return html_content
 
 
