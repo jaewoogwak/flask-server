@@ -103,8 +103,11 @@ pip install openai
 ---
 
 ## 주의사항
-1. mac, window 간 pdf_processing 문제
-wkhtmltopdf의 사용법이 mac과 windows가 다르기에 commit된 내용을 pull한 이후 확인이 필요함
+1. mac, window 간 pdf_processing 문제(main\function\pdf_processing.py)
+wkhtmltopdf의 사용법이 mac과 windows가 다르기에 commit된 내용을 pull한 이후 확인이 필요
+
+본인의 환경을 제외한 내용을 주석 처리 후 사용하면 됨.
+window의 경우 본인의 wkhtmltopdf 경로를 본인의 경로로 수정 필요
 ```
 # wkhtmltopdf 설치 후 경로 입력 필요(windows에서만 생기는 문제, 본인 경로에 맞게 수정, 서버(linux)에 올리는 경우는 테스트 필요)
 # Window 환경
@@ -114,6 +117,4 @@ pdfkit.from_string(html_content, output_file, configuration=config)
 # Mac 환경
 pdfkit.from_string(html_content, output_file)
 ```
-본인의 환경을 제외한 내용을 주석 처리 후 사용하면 됨.
-window의 경우 본인의 wkhtmltopdf 경로를 본인의 경로로 수정 필요
 ---
