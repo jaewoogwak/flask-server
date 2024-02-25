@@ -7,11 +7,14 @@
 ```
 /flask-server
     /apps
+        /chatbot
+            __init__.py
+            routes.py
+        /function
+            langchain.py
+            ocr.py
+            pdf_processing.py
         /main
-            /function
-                langchain.py
-                ocr.py
-                pdf_processing.py
             __init__.py
             routes.py
         models.py
@@ -34,11 +37,12 @@
     config.py : flask 서버 설정 코드
 
 /flask-server/apps : 서버의 기능을 정의한 폴더
-    /main : 메인화면을 구현
-        /function : 서버의 주요 로직을 구현
+    /chatbot : 챗봇 기능을 위한 라우팅 구현
+    /function : 서버의 주요 로직을 구현, 라우팅 코드에서 import하여 사용
         langchain.py : 랭체인의 기능을 구현
         ocr.py : Google Vision OCR 기능을 구현
         pdf_processing : Convert API 기능을 구현
+    /main : 학습자료 기반 문제 생성을 위한 라우팅 구현
 
      model.py : DataBase 기능을 구현(현재 미구현)
 
