@@ -12,7 +12,7 @@ import os
 current_directory = os.path.dirname(__file__)
 
 # 프로젝트 루트 디렉토리로 이동하기 위한 상대 경로를 설정합니다.
-root_directory = os.path.join(current_directory, '../../../')
+root_directory = os.path.join(current_directory, '../../')
 
 # JSON 파일의 상대 경로를 설정합니다.
 json_path = os.path.join(root_directory, 'serious-conduit-413006-58f255767a58.json')
