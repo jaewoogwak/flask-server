@@ -27,7 +27,7 @@ def UploadImage():
         
         output_file = 'output.pdf'
         use_GPT_PDF_processing(text, output_file)
-        return send_file(output_file, as_attachment=True, download_name='custom_filename.pdf')
+        return send_file(output_file, mimetype='application/pdf', as_attachment=True, download_name='custom_filename.pdf')
 
 @main.route('/images', methods=['POST'])
 def UploadImages():
@@ -49,7 +49,7 @@ def UploadImages():
     text = OCRImages_Byte(images)
     output_file = 'output.pdf'
     use_GPT_PDF_processing(text, output_file)
-    return send_file(output_file, as_attachment=True, download_name='custom_filename.pdf')
+    return send_file(output_file, mimetype='application/pdf', as_attachment=True, download_name='custom_filename.pdf')
 
 
 @main.route('/pdf', methods=['POST'])
@@ -71,7 +71,7 @@ def UploadPDF():
         
         output_file = 'output.pdf'
         use_GPT_PDF_processing(text, output_file)
-        return send_file(output_file, as_attachment=True, download_name='custom_filename.pdf')
+        return send_file(output_file, mimetype='application/pdf', as_attachment=True, download_name='custom_filename.pdf')
 
 def use_GPT_PDF_processing(text, output_file='output.pdf'):
     prompt_result = request_prompt(text)
