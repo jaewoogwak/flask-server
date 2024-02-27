@@ -104,6 +104,11 @@ poppler기반 라이브러리이므로 설치 필요 <https://wooiljeong.github.
 ```
 pip install openai
 ```
+
+9. unstructured : 텍스트, 이미지, PDF 파일 등 다양한 형태의 비정형 데이터를 분석하고 처리하는 라이브러리
+```
+pip install unstructured
+```
 ---
 
 ## 주의사항
