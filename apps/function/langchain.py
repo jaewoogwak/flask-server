@@ -1,5 +1,4 @@
 from openai import OpenAI
-import re
 client = OpenAI()    
 
 prompt_setting = """
