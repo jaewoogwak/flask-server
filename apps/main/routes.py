@@ -1,8 +1,9 @@
 from . import main
 from flask import request, send_file
 from ..function.ocr import OCRImage_Byte, OCRImages_Byte, OCRPDF
-from ..function.langchain import request_prompt
+from ..function.langchain import request_prompt, embedding
 from ..function.pdf_processing import generate_pdf_with_answers
+from ..chatbot import routes
 import re
 
 @main.route('/image', methods=['POST'])
@@ -71,6 +72,9 @@ def UploadPDF():
         return send_file(output_file, mimetype='application/pdf', as_attachment=True, download_name='custom_filename.pdf')
 
 def use_GPT_PDF_processing(text, output_file='output.pdf'):
+    # 사용자의 학습자료를 기반으로 vectordb 생성
+    routes.retriever = embedding(text)
+    
     prompt_result = request_prompt(text)
         
     questions = re.findall(r'문제명: (.+?)\n', prompt_result)
@@ -79,16 +83,16 @@ def use_GPT_PDF_processing(text, output_file='output.pdf'):
 
     # 객관식 문제의 선택지를 파싱합니다.
     choices_matches = re.findall(r'입력:\n((?:\s+[A-D]\) .+\n)+)', prompt_result)
-    for idx, match in enumerate(choices_matches):
-        # 각 선택지를 <br>로 구분하여 하나의 문자열로 합칩니다.
-        choices[idx] = match.strip().replace('\n', '<br>')
+    
+    # 모든 문제에 대해 서술형 메시지 또는 객관식 선택지 추가
+    for idx, question in enumerate(questions):
+        if idx < len(choices_matches):
+            # 각 선택지를 <br>로 구분하여 하나의 문자열로 합칩니다.
+            choices[idx] = choices_matches[idx].strip().replace('\n', '<br>')
+        else:
+            # 서술형 또는 단답형 문제에 대한 기본 메시지 설정
+            choices[idx] = "<br>____________________"
 
     answers = re.findall(r'해설: (.+?)(?:\n\n|\Z)', prompt_result, re.DOTALL)
-
-    # 서술형 또는 단답형 문제에 대한 처리가 필요한 경우
-    # 예시: 모든 빈 선택지에 "서술형 문제입니다." 메시지를 추가
-    for idx in range(len(choices)):
-        if choices[idx] == "":
-            choices[idx] = "<br>____________________"
 
     generate_pdf_with_answers(questions, choices, answers, output_file)

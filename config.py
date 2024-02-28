@@ -30,3 +30,20 @@ wk_setting = {
         'PATH': None  # 기본값, Linux 등 다른 운영체제
     }
 }[platform.system()]
+
+
+# GPT API KEY 설정, 환경 변수 설정으로 KEY를 하드코딩 X
+# linux의 경우
+# terminal에서 'nano ~/.bashrc' 입력 후 'export OPENAI_API_KEY="GPT_API_KEY"'으로 환경변수 설정
+# 이후 terminal에서 'source ~/.bashrc'로 설정 로드
+
+# MacOS의 경우
+# terminal에서 'nano ~/.zshrc' 입력 후 'export OPENAI_API_KEY="GPT_API_KEY"'으로 환경변수 설정
+# 이후 terminal에서 'source ~/.zshrc'로 설정 로드
+
+# windows의 경우
+# window 검색 창에 '환경 변수 편집'입력 후 선택 -> 시스템 변수 섹션에서 '새로만들기' 선택
+# -> 변수 이름으로 'OPENAI_API_KEY' 입력 후 변수 값으로 키 값(위에서 설명한 GPT_API_KEY) 입력
+# -> 내용 적용 후 컴퓨터 재부팅
+
+KEY = os.getenv("OPENAI_API_KEY")
