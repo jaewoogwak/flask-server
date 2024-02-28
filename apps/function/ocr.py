@@ -1,23 +1,8 @@
 import concurrent.futures
 import pdf2image
-from PIL import Image
 import io
-import numpy as np
-
 from google.cloud import vision
 
-import os
-
-# 현재 스크립트의 디렉토리 경로를 가져옵니다.
-current_directory = os.path.dirname(__file__)
-
-# 프로젝트 루트 디렉토리로 이동하기 위한 상대 경로를 설정합니다.
-root_directory = os.path.join(current_directory, '../../')
-
-# JSON 파일의 상대 경로를 설정합니다.
-json_path = os.path.join(root_directory, 'serious-conduit-413006-58f255767a58.json')
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = json_path
 
 def OCRImage_Byte(image_content):
     """
