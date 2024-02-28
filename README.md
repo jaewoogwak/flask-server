@@ -3,6 +3,7 @@
 
 
 ---
+
 ## 파일 구조
 ```
 /flask-server
@@ -53,6 +54,13 @@
 
 
 ## Package List
+0. 설명하기 앞서 한 번에 Package를 다운 받으려면 다음 명령어를 실행한다.
+```
+pip install -r requirements.txt
+```
+패키지 설치에 추가적인 설정 방법은 다음 패키지 설명을 참고
+
+
 1. flask : Python기반 Web Server Framework
 ```
 pip install flask
@@ -108,6 +116,11 @@ pip install openai
 9. unstructured : 텍스트, 이미지, PDF 파일 등 다양한 형태의 비정형 데이터를 분석하고 처리하는 라이브러리
 ```
 pip install unstructured
+```
+
+10. langchain : llm 모델을 사용하기 용이하게 해주는 라이브러리
+```
+pip install langchain
 ```
 ---
 
