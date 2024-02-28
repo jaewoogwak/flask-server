@@ -1,12 +1,9 @@
 from . import main
-from flask import Flask, request, jsonify, send_file
+from flask import request, send_file
 from ..function.ocr import OCRImage_Byte, OCRImages_Byte, OCRPDF
 from ..function.langchain import request_prompt
-from ..function.pdf_processing import generate_pdf, generate_pdf_with_answers
-from PIL import Image
-import io
+from ..function.pdf_processing import generate_pdf_with_answers
 import re
-import os
 
 @main.route('/image', methods=['POST'])
 def UploadImage():
