@@ -93,7 +93,7 @@ def create_pdf_from_html(html_content, output_file):
         # macOS 환경에서의 설정 사용
         pdfkit.from_string(html_content, output_file)
     elif wk_setting['OS'] == 'Linux':
-        pass
+        pdfkit.from_string(html_content, output_file)
 
 def remove_pdf(file_path):
     """

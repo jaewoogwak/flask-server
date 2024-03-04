@@ -7,4 +7,6 @@ google-cloud-vision
 pdf2image
 openai
 unstructured
-langchain
+langchain   
+tiktoken
+chromadb
