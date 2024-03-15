@@ -72,27 +72,27 @@ def UploadPDF():
         return send_file(output_file, mimetype='application/pdf', as_attachment=True, download_name='custom_filename.pdf')
 
 def use_GPT_PDF_processing(text, output_file='output.pdf'):
+    print(text)
+    
     # 사용자의 학습자료를 기반으로 vectordb 생성
     routes.retriever = embedding(text)
     
+    # API의 결과 JSON을 파싱하여 맵으로 할당
     prompt_result = request_prompt(text)
-        
-    questions = re.findall(r'문제명: (.+?)\n', prompt_result)
-    # 모든 문제에 대해 choices 배열을 초기화합니다.
-    choices = [""] * len(questions)  # 모든 문제에 대응하는 빈 선택지를 초기 설정
-
-    # 객관식 문제의 선택지를 파싱합니다.
-    choices_matches = re.findall(r'입력:\n((?:\s+[A-D]\) .+\n)+)', prompt_result)
     
-    # 모든 문제에 대해 서술형 메시지 또는 객관식 선택지 추가
-    for idx, question in enumerate(questions):
-        if idx < len(choices_matches):
-            # 각 선택지를 <br>로 구분하여 하나의 문자열로 합칩니다.
-            choices[idx] = choices_matches[idx].strip().replace('\n', '<br>')
-        else:
-            # 서술형 또는 단답형 문제에 대한 기본 메시지 설정
-            choices[idx] = "<br>____________________"
+    # 결과를 저장할 배열 초기화
+    cases = []
+    questions = []
+    choices = []
+    answers = []
+    explanations = []
 
-    answers = re.findall(r'해설: (.+?)(?:\n\n|\Z)', prompt_result, re.DOTALL)
+    # JSON 구조 파싱
+    for item in prompt_result["quiz_questions"]:
+        cases.append(item["case"])
+        questions.append(item["question"])
+        choices.append(item["choices"])
+        answers.append(item["correct_answer"])
+        explanations.append(item["explanation"])
 
-    generate_pdf_with_answers(questions, choices, answers, output_file)
+    generate_pdf_with_answers(cases, questions, choices, answers, explanations, output_file)

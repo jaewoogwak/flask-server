@@ -9,52 +9,85 @@ from langchain.chat_models import ChatOpenAI
 from langchain.callbacks.base import BaseCallbackHandler
 from openai import OpenAI
 from config import KEY
+import json
 
-client = OpenAI()    
-
-prompt_setting = """
-생성할 문제의 형식은 다음과 같습니다:
-- 각 문제는 '문제명'으로 시작합니다. 문제 번호 라벨링은 하지 말아주세요.
-- 객관식 문제의 경우, '입력'이라는 단어 다음에 선택지가 A), B), C), D)로 제시됩니다.
-- 단답형 또는 서술형 문제의 경우, '입력: ____________________'이라는 텍스트와 함께 제시됩니다.
-- 각 문제에는 해설이 포함됩니다.
-- 문제 생성 이외에 텍스트는 작성하지 마세요. 오직 문제 형식대로만 출력되어야 합니다.
-- 문제 생성 예시를 제공하니 그 예시의 형식대로 출력해주세요.
-
-이 규칙을 따라서, 사용자가 제시한 내용을 기반으로 하는 문제를 생성해주세요. 문제 문항은 10개, 문제 유형은 랜덤으로 해주세요. 제공할 내용은 OCR을 거쳐 얻은
-데이터로 특수문자(개행문자 등)나 관련 없는 내용이 포함되어 있는데 이를 제외한 내용에서 문제를 생성할 수 있도록 해주세요.
-"""
-
-output_template = """
-문제 생성 예시는 다음과 같습니다.
-문제 생성 예시(객관식):
-문제명: 2x + 6 = 12의 해는 무엇인가요?
-   입력:
-   A) 2
-   B) 3
-   C) 4
-   D) 5
-   해설: 이 방정식을 풀기 위해서는, 먼저 양변에서 6을 빼고, 그 결과를 2로 나누어 x의 값을 찾습니다.
-문제 생성 예시(서술형 및 단답형):
-문제명: 2x + 6 = 12의 해는 무엇인가요?
-   입력: ____________________
-   해설: 이 방정식을 풀기 위해서는, 먼저 양변에서 6을 빼고, 그 결과를 2로 나누어 x의 값을 찾습니다. 따라서 답은 12입니다.
-"""
+client = OpenAI()
 
 def request_prompt(contents):
+    prompt_setting = """
+    사용자가 제공하는 텍스트를 기반으로 4개의 문제를 생성하고 JSON 형식으로 반환해주세요. 전체 응답은 quiz_questions이라는 키를 가진 배열로 구성되어야 하며, 
+    각 문제는 case, question, choices, correct_answer, explanation을 포함해야 합니다. 
+    case는 문제 유형으로 객관식 문제이면 0이, 주관식문제이면 1이 입력됩니다. 
+    첫 2개의 문제는 객관식으로, 각 문제의 선택지는 4개이며, 정답과 해당 정답의 설명도 포함시켜주세요. 
+    나머지 2개의 문제는 서술형으로, choices는 '빈칸'으로 표시하고, correct_answer와 explanation을 문제에 맞게 서술형 답변으로 제공해주세요.
+    """
+
+    output_template = """
+    다음은 반환 JSON 포맷의 예시이다. 제시하는 JSON 포맷에 맞게 출력해야 한다.
+    JSON FORMAT:
+    {
+    "quiz_questions": [
+        {
+        "case": 0,
+        "question": "",
+        "choices": [
+            "",
+            "",
+            "",
+            ""
+        ],
+        "correct_answer": "",
+        "explanation": ""
+        },
+        {
+        "case": 0,
+        "question": "",
+        "choices": [
+            "",
+            "",
+            "",
+            ""
+        ],
+        "correct_answer": "",
+        "explanation": ""
+        },
+        {
+        "case": 1,
+        "question": "",
+        "choices": "빈칸",
+        "correct_answer": "",
+        "explanation": ""
+        },
+        {
+        "case": 1,
+        "question": "",
+        "choices": "빈칸",
+        "correct_answer": "",
+        "explanation": ""
+        }
+        ...(생략)
+    ]
+    }
+    """
+    
     # 문제 생성을 위한 프롬프트 설정
     message = [
         {"role": "system", "content": prompt_setting + output_template},
         {"role": "user", "content": contents}
     ]
-
-    completion = client.chat.completions.create(
-        model="gpt-4-0125-preview",
-        messages=message
-    )
     
-    print(completion.choices[0].message)
-    response = completion.choices[0].message.content
+    # JSON 모드를 사용하여 4개의 문제 생성 및 응답 받기
+    response_json = client.chat.completions.create(
+        model="gpt-4-0125-preview",
+        response_format={"type": "json_object"},
+          messages=message
+    )
+
+    # 응답에서 문제 추출 및 출력
+    #print(response_json.choices[0].message.content)
+    
+    # JSON 문자열을 파이썬 딕셔너리로 변환
+    response = json.loads(response_json.choices[0].message.content)
     
     return response
 
