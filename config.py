@@ -47,3 +47,6 @@ wk_setting = {
 # -> 내용 적용 후 컴퓨터 재부팅
 
 KEY = os.getenv("OPENAI_API_KEY")
+
+# groq API key 설정, chatbot기능 제외 문제 생성 로직에만 사용됨
+Groq_api_key=os.getenv("GROQ_API_KEY")

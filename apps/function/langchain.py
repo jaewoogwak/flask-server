@@ -8,9 +8,14 @@ from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks.base import BaseCallbackHandler
 from openai import OpenAI
-from config import KEY
+from config import KEY, Groq_api_key
+from groq import Groq
 
 client = OpenAI()    
+
+client_groq = Groq(
+    api_key=Groq_api_key,
+)
 
 prompt_setting = """
 생성할 문제의 형식은 다음과 같습니다:
@@ -21,7 +26,7 @@ prompt_setting = """
 - 문제 생성 이외에 텍스트는 작성하지 마세요. 오직 문제 형식대로만 출력되어야 합니다.
 - 문제 생성 예시를 제공하니 그 예시의 형식대로 출력해주세요.
 
-이 규칙을 따라서, 사용자가 제시한 내용을 기반으로 하는 문제를 생성해주세요. 문제 문항은 10개, 문제 유형은 랜덤으로 해주세요. 제공할 내용은 OCR을 거쳐 얻은
+이 규칙을 따라서, 사용자가 제시한 내용을 기반으로 하는 문제를 생성해주세요. 문제 문항은 3개, 문제 유형은 랜덤으로 해주세요. 제공할 내용은 OCR을 거쳐 얻은
 데이터로 특수문자(개행문자 등)나 관련 없는 내용이 포함되어 있는데 이를 제외한 내용에서 문제를 생성할 수 있도록 해주세요.
 """
 
@@ -48,10 +53,16 @@ def request_prompt(contents):
         {"role": "user", "content": contents}
     ]
 
-    completion = client.chat.completions.create(
-        model="gpt-4-0125-preview",
-        messages=message
-    )
+    # gpt 비활성화
+    # completion = client.chat.completions.create(
+    #     model="gpt-4-0125-preview",
+    #     messages=message
+    # )
+    
+    completion = client_groq.chat.completions.create(
+        messages=message,
+        model="mixtral-8x7b-32768",
+    ) 
     
     print(completion.choices[0].message)
     response = completion.choices[0].message.content
