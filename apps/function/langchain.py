@@ -80,11 +80,8 @@ def request_prompt(contents):
     response_json = client.chat.completions.create(
         model="gpt-4-0125-preview",
         response_format={"type": "json_object"},
-          messages=message
+        messages=message
     )
-
-    # 응답에서 문제 추출 및 출력
-    #print(response_json.choices[0].message.content)
     
     # JSON 문자열을 파이썬 딕셔너리로 변환
     response = json.loads(response_json.choices[0].message.content)

@@ -1,5 +1,6 @@
 import pdfkit
 import os
+import tempfile
 from config import wk_setting
 
 def generate_pdf(cases, questions, choices, answers, explanations, output_file='연습문제_정답없음.pdf'):
@@ -90,19 +91,45 @@ def create_html_content(cases, questions, choices, answers, explanations, includ
     html_content += '</div></body></html>'
     return html_content
 
+# def create_pdf_from_html(html_content, output_file):
+#     """
+#     HTML 내용으로부터 PDF 파일을 생성하는 함수
+#     """
+#     if wk_setting['OS'] == 'Windows':
+#         # Windows 환경에서의 설정 사용
+#         config = pdfkit.configuration(wkhtmltopdf=wk_setting['PATH'])
+#         pdfkit.from_string(html_content, output_file, configuration=config)
+#     elif wk_setting['OS'] == 'Darwin':
+#         # macOS 환경에서의 설정 사용
+#         pdfkit.from_string(html_content, output_file)
+#     elif wk_setting['OS'] == 'Linux':
+#         pdfkit.from_string(html_content, output_file)
+
 def create_pdf_from_html(html_content, output_file):
     """
-    HTML 내용으로부터 PDF 파일을 생성하는 함수
+    HTML 내용으로부터 PDF 파일을 생성하는 함수.
+    HTML 내용을 먼저 임시 파일로 저장하고, 이 파일을 사용하여 PDF 생성.
     """
-    if wk_setting['OS'] == 'Windows':
-        # Windows 환경에서의 설정 사용
-        config = pdfkit.configuration(wkhtmltopdf=wk_setting['PATH'])
-        pdfkit.from_string(html_content, output_file, configuration=config)
-    elif wk_setting['OS'] == 'Darwin':
-        # macOS 환경에서의 설정 사용
-        pdfkit.from_string(html_content, output_file)
-    elif wk_setting['OS'] == 'Linux':
-        pdfkit.from_string(html_content, output_file)
+    # 임시 HTML 파일을 생성. 이 파일은 자동으로 삭제되지 않음. 명시적으로 utf-8형식으로 인코딩
+    temp_html_file = tempfile.NamedTemporaryFile(mode='w+', encoding='utf-8', delete=False, suffix='.html')
+    try:
+        # HTML 내용을 임시 파일에 기록
+        temp_html_file.write(html_content)
+        temp_html_file.close()
+
+        # 운영체제별 설정을 확인하고, 해당하는 설정을 사용하여 PDF를 생성
+        if wk_setting['OS'] == 'Windows':
+            # Windows 환경에서의 설정 사용
+            config = pdfkit.configuration(wkhtmltopdf=wk_setting['PATH'])
+            pdfkit.from_file(temp_html_file.name, output_file, configuration=config)
+        elif wk_setting['OS'] == 'Darwin':
+            # macOS 환경에서의 설정 사용
+            pdfkit.from_file(temp_html_file.name, output_file)
+        elif wk_setting['OS'] == 'Linux':
+            pdfkit.from_file(temp_html_file.name, output_file)
+    finally:
+        # 임시 HTML 파일을 삭제
+        os.remove(temp_html_file.name)
 
 def remove_pdf(file_path):
     """
