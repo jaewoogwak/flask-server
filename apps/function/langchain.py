@@ -10,6 +10,7 @@ from langchain.callbacks.base import BaseCallbackHandler
 from openai import OpenAI
 from config import KEY
 import json
+import os
 
 client = OpenAI()
 
@@ -91,9 +92,16 @@ def request_prompt(contents):
 # 유저의 입력을 벡터화시키는 함수
 def embedding(user_input):
     
-    # input_data를 지정 위치에 저장함
-    file_path = f"./.cache/files/test.txt"
-    with open(file_path, "w") as f:
+    # 파일 경로 설정
+    file_path = "./.cache/files/test.txt"
+    directory = os.path.dirname(file_path)
+
+    # 디렉토리가 존재하지 않는 경우 생성
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # 파일 쓰기
+    with open(file_path, "w", encoding='utf-8') as f:
         f.write(user_input)
 
     # splitter, loader 생성
