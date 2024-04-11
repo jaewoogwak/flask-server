@@ -117,6 +117,11 @@ def UploadImages():
 
 #     generate_pdf_with_answers(cases, questions, choices, answers, explanations, output_file)
 
+@main.route('/download', methods=['GET'])
+def DownloadPDF():
+    output_file = 'output.pdf'
+    return send_file(output_file, mimetype='application/pdf', as_attachment=True, download_name='custom_filename.pdf')
+
 @main.route('/pdf', methods=['POST'])
 def UploadPDF():
     """
