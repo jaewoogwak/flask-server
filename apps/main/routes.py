@@ -7,7 +7,7 @@ from ..chatbot import routes
 from concurrent.futures import ThreadPoolExecutor
 
 @main.route('/image', methods=['POST'])
-def UploadImage():
+def upload_image():
     """
     단일 이미지를 처리할 엔드포인트
     """
@@ -28,7 +28,7 @@ def UploadImage():
         return jsonify(result), 200
 
 @main.route('/images', methods=['POST'])
-def UploadImages():
+def upload_images():
     """
     여러 이미지를 처리할 엔드포인트
     """
@@ -49,7 +49,7 @@ def UploadImages():
     return jsonify(result), 200
 
 @main.route('/pdf', methods=['POST'])
-def UploadPDF():
+def upload_PDF():
     """
     PDF 파일을 처리할 엔드포인트
     """
@@ -67,7 +67,7 @@ def UploadPDF():
         return jsonify(result), 200
 
 @main.route('/download', methods=['GET'])
-def DownloadPDF():
+def download_PDF():
     output_file = 'output.pdf'
     return send_file(output_file, mimetype='application/pdf', as_attachment=True, download_name='custom_filename.pdf')
 
