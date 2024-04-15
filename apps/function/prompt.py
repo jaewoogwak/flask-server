@@ -1,4 +1,4 @@
-class Make_Problem_Prompt:
+class make_problem_prompt:
     instruction = """
     당신의 역할은 입력한 데이터를 기반으로 문제를 만들어주는 스터디 멘토입니다. 생성하는 모든 문제는 입력 데이터를 기반으로 검증된 내용이어야 합니다.
     응답은 JSON 형식으로 반환해주세요.
@@ -63,7 +63,7 @@ class Make_Problem_Prompt:
     """
 
     def __init__(self, text, num_questions=4, num_multiple_choice=2, num_short_answer=2):
-        self.output_data = text
+        self.input_data = text
         self.num_questions = num_questions
         self.num_multiple_choice = num_multiple_choice
         self.num_short_answer = num_short_answer
