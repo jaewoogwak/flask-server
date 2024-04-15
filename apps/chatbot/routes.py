@@ -1,6 +1,6 @@
 from . import main
-from flask import Flask, request, jsonify, send_file
-from ..function.ocr import OCRImage_Byte, OCRImages_Byte, OCRPDF
+from flask import Flask, request, jsonify
+from ..function.ocr import OCR_image_byte, OCR_images_byte, OCR_PDF
 from ..function.langchain import embedding, search_answer
 
 # retriever를 통해 vectordb를 생성하고 vectordb기반 질문응답이 가능함
@@ -21,7 +21,7 @@ def generate_vectorDB():
     if file:
         # 이미지 파일의 내용을 읽음
         image_content = file.read()
-        text = OCRImage_Byte(image_content)
+        text = OCR_image_byte(image_content)
         
         global retriever
         retriever = embedding(text)
