@@ -73,12 +73,15 @@ class Make_Problem_Prompt:
         self.num_multiple_choice = num_questions // 2
         self.num_short_answer = num_questions - self.num_multiple_choice
 
-    def Make_System_Prompt(self):
+    def set_user_input(self, text):
+        self.input_data = text
+
+    def get_system_prompt(self):
         return self.instruction.format(
             num_questions=self.num_questions,
             num_multiple_choice=self.num_multiple_choice,
             num_short_answer=self.num_short_answer
         ) + self.context + self.output_template
 
-    def Make_User_Input(self):
+    def get_user_input(self):
         return self.input_data
