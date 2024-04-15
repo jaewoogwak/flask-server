@@ -2,7 +2,6 @@ flask
 flask-cors
 Pillow
 pdfkit
-numpy
 google-cloud-vision
 pdf2image
 openai

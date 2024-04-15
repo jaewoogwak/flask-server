@@ -39,11 +39,14 @@
 
 /flask-server/apps : 서버의 기능을 정의한 폴더
     /chatbot : 챗봇 기능을 위한 라우팅 구현
-    /function : 서버의 주요 로직을 구현, 라우팅 코드에서 import하여 사용
-        langchain.py : 랭체인의 기능을 구현
+    /feedback : 문제 피드백 기능을 위한 라우팅 구현
+    /function : 서버의 주요 단위 로직을 구현
+        langchain.py : GPT API 사용 및 랭체인의 기능을 구현
         ocr.py : Google Vision OCR 기능을 구현
-        pdf_processing : Convert API 기능을 구현
+        pdf_processing.py : PDF 파일 생성 기능을 구현
+        prompt.py : GPT API 사용 시 정의하는 프롬프트를 구현
     /main : 학습자료 기반 문제 생성을 위한 라우팅 구현
+        generate_problem.py : 문제 생성시 필요한 로직을 통합한 함수 구현
 
      model.py : DataBase 기능을 구현(현재 미구현)
 
@@ -89,36 +92,30 @@ pdfkit을 사용하기 위해 wkhtmltopdf를 설치해야 함.
 - linux : <https://velog.io/@agust15/파이썬-wkhtmltopdf-설치하기centOS> 참고
 
 
-5. NumPy : 다차원 배열 객체와 배열 작업을 위한 다양한 도구를 제공
-```
-pip install numpy
-```
-
-
-6. google-cloud-vision : Google Cloud Vision API 클라이언트 라이브러리로, 이미지 분석을 위한 라이브러리
+5. google-cloud-vision : Google Cloud Vision API 클라이언트 라이브러리로, 이미지 분석을 위한 라이브러리
 ```
 pip install google-cloud-vision
 ```
 - 키파일 필요(깃에는 커밋하지 않았음)
 
 
-7. pdf2image : PDF를 이미지로 변환하기 위한 라이브러리
+6. pdf2image : PDF를 이미지로 변환하기 위한 라이브러리
 ```
 pip install pdf2image
 ```
 poppler기반 라이브러리이므로 설치 필요 <https://wooiljeong.github.io/python/pdf-to-image/> 참조
 
-8. openai : OpenAI의 API를 사용하기 위한 클라이언트 라이브러리
+7. openai : OpenAI의 API를 사용하기 위한 클라이언트 라이브러리
 ```
 pip install openai
 ```
 
-9. unstructured : 텍스트, 이미지, PDF 파일 등 다양한 형태의 비정형 데이터를 분석하고 처리하는 라이브러리
+8. unstructured : 텍스트, 이미지, PDF 파일 등 다양한 형태의 비정형 데이터를 분석하고 처리하는 라이브러리
 ```
 pip install unstructured
 ```
 
-10. langchain : llm 모델을 사용하기 용이하게 해주는 라이브러리
+9. langchain : llm 모델을 사용하기 용이하게 해주는 라이브러리
 ```
 pip install langchain
 ```
