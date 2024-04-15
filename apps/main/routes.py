@@ -159,15 +159,20 @@ def use_GPT_PDF_processing(text, output_file='output.pdf'):
             start = i * token_size - overlap_size
             end = (i + 1) * token_size + overlap_size
         tokens.append(text[start:end])
+        
     # 병렬 처리를 사용하여 API에 5번 요청하여 문제 받아오기
     with ThreadPoolExecutor() as executor:
         results = list(executor.map(request_prompt, tokens))
+    
+    print(results)    
     # 결과를 저장할 배열 초기화
     cases = []
     questions = []
     choices = []
     answers = []
     explanations = []
+    intents = []
+
     # 결과를 저장할 리스트 초기화
     quiz_data = []
     # JSON 구조 파싱
@@ -178,13 +183,56 @@ def use_GPT_PDF_processing(text, output_file='output.pdf'):
             choices.append(item["choices"])
             answers.append(item["correct_answer"])
             explanations.append(item["explanation"])
+            intents.append(item["intent"])
             quiz_data.append({
                 "case": item["case"],
                 "question": item["question"],
                 "choices": item["choices"],
                 "correct_answer": item["correct_answer"],
-                "explanation": item["explanation"]
+                "explanation": item["explanation"],
+                "intent": item["intent"]
             })
     # PDF 파일 생성
     generate_pdf_with_answers(cases, questions, choices, answers, explanations, output_file)
     return quiz_data
+
+# def use_GPT_PDF_processing(text, output_file='output.pdf'):
+#     print(text)
+#     # 사용자의 학습자료를 기반으로 vectordb 생성
+#     routes.retriever = embedding(text)
+
+#     # 텍스트를 한 덩어리로 처리
+#     result = request_prompt(text)
+
+#     # 결과를 저장할 배열 초기화
+#     cases = []
+#     questions = []
+#     choices = []
+#     answers = []
+#     explanations = []
+#     intents = []
+
+#     # 결과를 저장할 리스트 초기화
+#     quiz_data = []
+
+#     # JSON 구조 파싱
+#     for item in result["quiz_questions"]:
+#         cases.append(item["case"])
+#         questions.append(item["question"])
+#         choices.append(item["choices"])
+#         answers.append(item["correct_answer"])
+#         explanations.append(item["explanation"])
+#         intents.append(item["intent"])
+#         quiz_data.append({
+#             "case": item["case"],
+#             "question": item["question"],
+#             "choices": item["choices"],
+#             "correct_answer": item["correct_answer"],
+#             "explanation": item["explanation"],
+#             "intent": item["intent"]
+#         })
+
+#     # PDF 파일 생성
+#     generate_pdf_with_answers(cases, questions, choices, answers, explanations, output_file)
+
+#     return quiz_data

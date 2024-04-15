@@ -17,10 +17,12 @@ client = OpenAI()
 def request_prompt(contents):
     prompt_setting = """
     사용자가 제공하는 텍스트를 기반으로 4개의 문제를 생성하고 JSON 형식으로 반환해주세요. 전체 응답은 quiz_questions이라는 키를 가진 배열로 구성되어야 하며, 
-    각 문제는 case, question, choices, correct_answer, explanation을 포함해야 합니다. 
-    case는 문제 유형으로 객관식 문제이면 0이, 주관식문제이면 1이 입력됩니다. 
+    각 문제는 case, question, choices, correct_answer, explanation, intent을 포함해야 합니다. 
+    case는 문제 유형으로 객관식 문제이면 0이, 단답식문제이면 1이 입력됩니다. 
     첫 2개의 문제는 객관식으로, 각 문제의 선택지는 4개이며, 정답과 해당 정답의 설명도 포함시켜주세요. 
-    나머지 2개의 문제는 서술형으로, choices는 '빈칸'으로 표시하고, correct_answer와 explanation을 문제에 맞게 서술형 답변으로 제공해주세요.
+    나머지 2개의 문제는 단답형으로, choices는 '빈칸'으로 표시하고, correct_answer와 explanation을 문제에 맞게 서술형 답변으로 제공해주세요.
+    intent에는 문제 출제의 의도롤 설명하고, 학습자가 문제를 풀었을 때 출제자의 입장에서 기대하는 내용도 포함해주세요.
+    question, explanation, intent는 한글로 제시해줘.
     """
 
     output_template = """
@@ -38,7 +40,8 @@ def request_prompt(contents):
             ""
         ],
         "correct_answer": "",
-        "explanation": ""
+        "explanation": "",
+        "intent": ""
         },
         {
         "case": 0,
@@ -50,21 +53,24 @@ def request_prompt(contents):
             ""
         ],
         "correct_answer": "",
-        "explanation": ""
+        "explanation": "",
+        "intent": ""
         },
         {
         "case": 1,
         "question": "",
         "choices": "빈칸",
         "correct_answer": "",
-        "explanation": ""
+        "explanation": "",
+        "intent": ""
         },
         {
         "case": 1,
         "question": "",
         "choices": "빈칸",
         "correct_answer": "",
-        "explanation": ""
+        "explanation": "",
+        "intent": ""
         }
         ...(생략)
     ]
@@ -79,7 +85,8 @@ def request_prompt(contents):
     
     # JSON 모드를 사용하여 4개의 문제 생성 및 응답 받기
     response_json = client.chat.completions.create(
-        model="gpt-4-0125-preview",
+        model="gpt-4-turbo",
+        #model="gpt-4-0125-preview",
         response_format={"type": "json_object"},
         messages=message
     )
