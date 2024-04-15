@@ -4,7 +4,7 @@ import io
 from google.cloud import vision
 
 
-def OCRImage_Byte(image_content):
+def OCR_image_byte(image_content):
     """
     이미지 파일의 내용에서 텍스트를 추출합니다.
     :param image_content: 이미지 파일의 내용 (bytes)
@@ -20,7 +20,7 @@ def OCRImage_Byte(image_content):
     else:
         return "No text found"
 
-def OCRImages_Byte(images_content):
+def OCR_images_byte(images_content):
     """
     여러 이미지 파일의 내용에서 텍스트를 추출합니다.
     :param images_content: 텍스트를 추출할 이미지 파일들의 내용 (bytes)
@@ -41,7 +41,7 @@ def OCRImages_Byte(images_content):
     return " ".join(results)
 
 
-def OCRPDF(pdf_content):
+def OCR_PDF(pdf_content):
     """
     PDF 파일의 내용에서 텍스트를 추출합니다.
     PDF의 내용을 이미지로 변환한 후 이미지에서 텍스트를 추출합니다.

@@ -1,6 +1,6 @@
 from . import main
 from flask import request, send_file, jsonify
-from ..function.ocr import OCRImage_Byte, OCRImages_Byte, OCRPDF
+from ..function.ocr import OCR_image_Byte, OCR_images_Byte, OCR_PDF
 from ..function.langchain import request_prompt, embedding
 from ..function.pdf_processing import generate_pdf_with_answers
 from ..chatbot import routes
@@ -21,7 +21,7 @@ def upload_image():
     if file:
         # 이미지 파일의 내용을 읽음
         image_content = file.read()
-        text = OCRImage_Byte(image_content)
+        text = OCR_image_Byte(image_content)
         
         output_file = 'output.pdf'
         result = use_GPT_PDF_processing(text, output_file)
@@ -43,7 +43,7 @@ def upload_images():
     images = [file.read() for file in files]
 
     # 이미지 OCR 처리
-    text = OCRImages_Byte(images)
+    text = OCR_images_Byte(images)
     output_file = 'output.pdf'
     result = use_GPT_PDF_processing(text, output_file)
     return jsonify(result), 200
@@ -62,7 +62,7 @@ def upload_PDF():
     if file:
         # PDF 파일의 내용을 읽음
         pdf_content = file.read()
-        text = OCRPDF(pdf_content)
+        text = OCR_PDF(pdf_content)
         result = use_GPT_PDF_processing(text)
         return jsonify(result), 200
 
