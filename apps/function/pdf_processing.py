@@ -58,8 +58,8 @@ def create_html_content(cases, questions, choices, answers, explanations, includ
         options_html = None
         if ca == 0:
             options_html = '<div class="options">'
-            for i, option in enumerate(c, start=1):
-                options_html += f'{i})  {option}<br>'
+            for option in c:
+                options_html += f'{option}<br>'
             options_html += '</div>'
         elif ca == 1:
             options_html = '<div class="options">답변:  <br></div>'
