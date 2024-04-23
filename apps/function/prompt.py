@@ -9,9 +9,9 @@ class make_problem_prompt:
     context = """
     전체 응답은 quiz_questions이라는 키를 가진 배열로 구성되어야 합니다.
     case는 문제의 유형으로, 객관식 문제의 경우 0, 단답식 문제의 경우 1로 설정해주세요.
-    question은 입력 데이터를 기반으로 생성한 문제 명입니다.
-    choice는 문제 선택지로, 객관식인 경우 문제 선택지는 4개이고, 단답형의 경우 '빈칸'으로 표시합니다.
-    correct_answer는 문제의 정답 입니다.
+    question은 입력 데이터를 기반으로 생성한 문제 명입니다. 객관식, 단답형에 맞게 알맞은 문제 제시로 설정되었는지 검증하여 설정해주세요.
+    choice는 문제 선택지로, 객관식인 경우 문제 선택지는 4개이고, 단답형의 경우 '빈칸'으로 표시합니다. 객관식 선택지를 넘버링으로 시작해주세요("1.", "2.", "3.", "4.")
+    correct_answer는 문제의 정답 입니다. 객관식의 경우 정답 선택 번호를 제시해주세요.
     explanation은 정답에 대한 해설입니다. 문제의 정답이 왜 그런지 설명해주세요.
     intent는 문제 출제 의도에 대한 내용입니다. 문제를 생성할 때 문제를 푸는 사람에게 요구하는 것, 문제의 의도된 해결 방식을 기술합니다.
     """
@@ -28,16 +28,16 @@ class make_problem_prompt:
                 "case": 0,                        // integer
                 "question": "",                   // string
 
-                "choices": ["", "", "", ""],      // array of strings
-                "correct_answer": "",             // string
+                "choices": ["1.", "2.", "3.", "4."],      // array of strings
+                "correct_answer": "",             // integer
                 "explanation": "",                // string
                 "intent": ""                      // string
             },
             {
                 "case": 0,                        // integer
                 "question": "",                   // string
-                "choices": ["", "", "", ""],      // array of strings
-                "correct_answer": "",             // string
+                "choices": ["1.", "2.", "3.", "4."],      // array of strings
+                "correct_answer": "",             // integer
                 "explanation": "",                // string
                 "intent": ""                      // string
             },
