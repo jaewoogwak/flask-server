@@ -8,7 +8,7 @@ from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks.base import BaseCallbackHandler
 from openai import OpenAI
-from .prompt import make_problem_prompt
+from .prompt import make_problem_prompt, make_problem_prompt_img
 from config import KEY
 import json
 import os
@@ -16,12 +16,11 @@ import os
 client = OpenAI()
 
 def request_prompt(contents, options):
-    problem_num = options["examNumber"]
     mutiple_num = options["multipleChoice"]
     short_num = options["shortAnswer"]
     custom_prompt = options["custom_prompt"]
     
-    prompt = make_problem_prompt(contents, problem_num, mutiple_num, short_num)
+    prompt = make_problem_prompt(contents, mutiple_num, short_num)
     prompt.set_custom_prompt(custom_prompt)
     
     # 문제 생성을 위한 프롬프트 설정
@@ -30,6 +29,29 @@ def request_prompt(contents, options):
         {"role": "user", "content": prompt.get_user_input()}
     ]
 
+    # JSON 모드를 사용하여 num_questions개의 문제 생성 및 응답 받기
+    response_json = client.chat.completions.create(
+        model="gpt-4-turbo",  
+        response_format={"type": "json_object"},
+        messages=message
+    )
+
+    # JSON 문자열을 파이썬 딕셔너리로 변환
+    response = json.loads(response_json.choices[0].message.content)
+    return response
+
+def request_prompt_img(options):
+    mutiple_num = options["multipleChoice"]
+    short_num = options["shortAnswer"]
+    
+    prompt = make_problem_prompt_img(mutiple_num, short_num)
+    
+    # 문제 생성을 위한 프롬프트 설정
+    message = [
+        {"role": "system", "content": prompt.get_system_prompt()},
+        {"role": "user", "content": prompt.get_user_input()}
+    ]
+    
     # JSON 모드를 사용하여 num_questions개의 문제 생성 및 응답 받기
     response_json = client.chat.completions.create(
         model="gpt-4-turbo",  

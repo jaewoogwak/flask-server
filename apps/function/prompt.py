@@ -1,5 +1,6 @@
 import json
 
+# 문제 생성 프롬프트 정의 클래스
 class make_problem_prompt:
     def __init__(self, text, num_multiple_choice=2, num_short_answer=2):
         self.input_data = text
@@ -77,7 +78,53 @@ class make_problem_prompt:
     
     def get_user_input(self):
         return self.input_data
+ 
+ 
+ # 이미지 기반 문제 생성 프롬프트 정의 클래스(미완성)
+class make_problem_prompt_img:
+    def __init__(self, num_multiple_choice=2, num_short_answer=2):
+        self.num_multiple_choice = num_multiple_choice
+        self.num_short_answer = num_short_answer
     
+    instruction = """
+    당신의 역할은 입력한 데이터를 기반으로 문제를 만들어주는 스터디 멘토입니다. 생성하는 모든 문제는 입력 데이터를 기반으로 검증된 내용이어야 합니다.
+    응답은 JSON 형식으로 반환해주세요.
+    문제 구성은 객관식 {num_multiple_choice}문제, 단답형 {num_short_answer}문제로 구성해주세요.
+    각 문제는 case, question, choices, correct_answer, explanation, intent을 포함해야 합니다. 문제 생성은 한글로 해주세요.
+    """
+
+    context = """
+    """
+
+    output_template = """
+    다음은 반환 JSON 포맷의 예시입니다. 제시하는 JSON 포맷에 맞게 출력해야 합니다.
+
+    JSON FORMAT:
+    {
+        "quiz_questions": [
+            {
+                "case": 0,                        // integer
+                "question": "",                   // string
+
+                "choices": ["1.", "2.", "3.", "4."],      // array of strings
+                "correct_answer": "",             // integer
+                "explanation": "",                // string
+                "intent": ""                      // string
+            },
+            {
+                "case": 1,                        // integer
+                "question": "",                   // string
+                "choices": "빈칸",                  // string
+
+                "correct_answer": "",             // string
+                "explanation": "",                // string
+                "intent": ""                      // string
+            }
+        ]
+    }
+    """
+ 
+ # 문제 채점 및 피드백 정의 프롬프트
 class marking_problem:
     instruction = """
     너의 역할은 사용자가 풀이한 문제 대한 피드백을 해주는 멘토입니다. 응답은 JSON 형식으로 반환해주세요. 사용자가 풀이한 문제에 대한 정보를 입력으로 주어지면
