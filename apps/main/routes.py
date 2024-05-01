@@ -2,6 +2,7 @@ from . import main
 from flask import request, send_file, jsonify
 from ..function.ocr import OCR_image_byte, OCR_images_byte, OCR_PDF
 from .generate_problem import generate
+import json
 
 @main.route('/image', methods=['POST'])
 def upload_image():
@@ -54,7 +55,8 @@ def upload_PDF():
         return jsonify({"error": "No file part"}), 400
     
     file = request.files['file']
-    user_option = request.form['examSetting']
+    user_option_str = request.form['examSetting']
+    user_option = json.loads(user_option_str)
     
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
