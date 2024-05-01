@@ -4,7 +4,7 @@ from ..chatbot import routes
 from concurrent.futures import ThreadPoolExecutor
 
 # 병렬 처리를 이용한 GPT API 처리
-def generate(text, output_file='output.pdf'):
+def generate_parallel(text, options, output_file='output.pdf'):
     print(text)
     # 사용자의 학습자료를 기반으로 vectordb 생성
     routes.retriever = embedding(text)
@@ -56,48 +56,49 @@ def generate(text, output_file='output.pdf'):
                 "explanation": item["explanation"],
                 "intent": item["intent"]
             })
+            
     # PDF 파일 생성
     generate_pdf_with_answers(cases, questions, choices, answers, explanations, output_file)
     return quiz_data
 
 # 단일 GPT API 처리 로직
-# def use_GPT_PDF_processing(text, output_file='output.pdf'):
-#     print(text)
-#     # 사용자의 학습자료를 기반으로 vectordb 생성
-#     routes.retriever = embedding(text)
+def generate(text, options, output_file='output.pdf'):
+    print(text)
+    # 사용자의 학습자료를 기반으로 vectordb 생성
+    routes.retriever = embedding(text)
 
-#     # 텍스트를 한 덩어리로 처리
-#     result = request_prompt(text)
+    # 텍스트를 한 덩어리로 처리
+    result = request_prompt(text)
 
-#     # 결과를 저장할 배열 초기화
-#     cases = []
-#     questions = []
-#     choices = []
-#     answers = []
-#     explanations = []
-#     intents = []
+    # 결과를 저장할 배열 초기화
+    cases = []
+    questions = []
+    choices = []
+    answers = []
+    explanations = []
+    intents = []
 
-#     # 결과를 저장할 리스트 초기화
-#     quiz_data = []
+    # 결과를 저장할 리스트 초기화
+    quiz_data = []
 
-#     # JSON 구조 파싱
-#     for item in result["quiz_questions"]:
-#         cases.append(item["case"])
-#         questions.append(item["question"])
-#         choices.append(item["choices"])
-#         answers.append(item["correct_answer"])
-#         explanations.append(item["explanation"])
-#         intents.append(item["intent"])
-#         quiz_data.append({
-#             "case": item["case"],
-#             "question": item["question"],
-#             "choices": item["choices"],
-#             "correct_answer": item["correct_answer"],
-#             "explanation": item["explanation"],
-#             "intent": item["intent"]
-#         })
+    # JSON 구조 파싱
+    for item in result["quiz_questions"]:
+        cases.append(item["case"])
+        questions.append(item["question"])
+        choices.append(item["choices"])
+        answers.append(item["correct_answer"])
+        explanations.append(item["explanation"])
+        intents.append(item["intent"])
+        quiz_data.append({
+            "case": item["case"],
+            "question": item["question"],
+            "choices": item["choices"],
+            "correct_answer": item["correct_answer"],
+            "explanation": item["explanation"],
+            "intent": item["intent"]
+        })
 
-#     # PDF 파일 생성
-#     generate_pdf_with_answers(cases, questions, choices, answers, explanations, output_file)
+    # PDF 파일 생성
+    generate_pdf_with_answers(cases, questions, choices, answers, explanations, output_file)
 
-#     return quiz_data
+    return quiz_data
