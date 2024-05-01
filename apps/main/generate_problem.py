@@ -65,7 +65,7 @@ def generate(text, options, output_file='output.pdf'):
     # 사용자의 학습자료를 기반으로 vectordb 생성
     routes.retriever = embedding(text)
 
-    # 텍스트를 한 덩어리로 처리
+    # 텍스트를 한 덩어리로 처리, 사용자 커스텀 프롬프트 정보 전달
     result = request_prompt(text, options)
 
     # 결과를 저장할 배열 초기화

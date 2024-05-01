@@ -15,9 +15,15 @@ import os
 
 client = OpenAI()
 
-def request_prompt(contents, num_questions=4):
-    prompt = make_problem_prompt(contents, num_questions=num_questions)
-
+def request_prompt(contents, options):
+    problem_num = options["examNumber"]
+    mutiple_num = options["multipleChoice"]
+    short_num = options["shortAnswer"]
+    custom_prompt = options["custom_prompt"]
+    
+    prompt = make_problem_prompt(contents, problem_num, mutiple_num, short_num)
+    prompt.set_custom_prompt(custom_prompt)
+    
     # 문제 생성을 위한 프롬프트 설정
     message = [
         {"role": "system", "content": prompt.get_system_prompt()},
@@ -27,7 +33,6 @@ def request_prompt(contents, num_questions=4):
     # JSON 모드를 사용하여 num_questions개의 문제 생성 및 응답 받기
     response_json = client.chat.completions.create(
         model="gpt-4-turbo",  
-        # model="gpt-4-0125-preview",
         response_format={"type": "json_object"},
         messages=message
     )
