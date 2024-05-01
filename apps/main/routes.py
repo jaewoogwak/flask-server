@@ -54,11 +54,13 @@ def upload_PDF():
         return jsonify({"error": "No file part"}), 400
     
     file = request.files['file']
+    user_option = request.form['examSetting']
+    
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
     if file:
         # PDF 파일의 내용을 읽음
         pdf_content = file.read()
         text = OCR_PDF(pdf_content)
-        result = generate(text)
+        result = generate(text, user_option)
         return jsonify(result), 200
