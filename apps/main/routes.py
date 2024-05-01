@@ -62,8 +62,3 @@ def upload_PDF():
         text = OCR_PDF(pdf_content)
         result = generate(text)
         return jsonify(result), 200
-
-@main.route('/download', methods=['GET'])
-def download_PDF():
-    output_file = 'output.pdf'
-    return send_file(output_file, mimetype='application/pdf', as_attachment=True, download_name='custom_filename.pdf')
