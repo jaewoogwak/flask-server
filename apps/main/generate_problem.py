@@ -5,7 +5,6 @@ from concurrent.futures import ThreadPoolExecutor
 
 # 병렬 처리를 이용한 GPT API 처리
 def generate_parallel(text, options, output_file='output.pdf'):
-    print(text)
     # 사용자의 학습자료를 기반으로 vectordb 생성
     routes.retriever = embedding(text)
     # 텍스트를 5개의 토큰으로 분할하고, 토큰이 맥락을 유지하도록 겹치게 분할
@@ -28,7 +27,7 @@ def generate_parallel(text, options, output_file='output.pdf'):
     with ThreadPoolExecutor() as executor:
         results = list(executor.map(request_prompt, tokens))
     
-    print(results)    
+    #print(results)    
     # 결과를 저장할 배열 초기화
     cases = []
     questions = []
@@ -63,12 +62,11 @@ def generate_parallel(text, options, output_file='output.pdf'):
 
 # 단일 GPT API 처리 로직
 def generate(text, options, output_file='output.pdf'):
-    print(text)
     # 사용자의 학습자료를 기반으로 vectordb 생성
     routes.retriever = embedding(text)
 
     # 텍스트를 한 덩어리로 처리
-    result = request_prompt(text)
+    result = request_prompt(text, options)
 
     # 결과를 저장할 배열 초기화
     cases = []
