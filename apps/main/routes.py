@@ -61,10 +61,9 @@ def upload_PDF():
     
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
-    if file:
-        # PDF 파일의 내용을 읽음
-        pdf_content = file.read()
-        text = OCR_PDF(pdf_content)
-        # text = process_pdf_to_openai_responses(pdf_content)
-        result = generate(text, user_option)
-        return jsonify(result), 200
+    
+    # PDF 파일의 내용을 읽음
+    pdf_content = file.read()
+    text = process_pdf_to_openai_responses(pdf_content) if user_option["image"] == "true" else OCR_PDF(pdf_content)
+    result = generate(text, user_option)
+    return jsonify(result), 200
