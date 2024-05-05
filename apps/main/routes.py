@@ -2,7 +2,7 @@ from . import main
 from flask import request, send_file, jsonify
 from ..function.ocr import OCR_image_byte, OCR_images_byte, OCR_PDF
 from .generate_problem import generate
-from ..function.image_test import process_pdf_to_openai_responses
+from ..function.image_test import image_to_openai_response, images_to_openai_responses, PDF_to_openai_responses
 import json
 
 @main.route('/image', methods=['POST'])
@@ -61,10 +61,9 @@ def upload_PDF():
     
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
-    if file:
-        # PDF 파일의 내용을 읽음
-        pdf_content = file.read()
-        text = OCR_PDF(pdf_content)
-        # text = process_pdf_to_openai_responses(pdf_content)
-        result = generate(text, user_option)
-        return jsonify(result), 200
+    
+    # PDF 파일의 내용을 읽음
+    pdf_content = file.read()
+    text = PDF_to_openai_responses(pdf_content) if user_option["image"] == "true" else OCR_PDF(pdf_content)
+    result = generate(text, user_option)
+    return jsonify(result), 200
