@@ -26,7 +26,7 @@ def upload_image():
     if file:
         # 이미지 파일의 내용을 읽음
         image_content = file.read()
-        text = image_to_openai_response if user_option['image'] == "true" else OCR_image_byte(image_content)
+        text = image_to_openai_response(image_content) if user_option['image'] == "true" else OCR_image_byte(image_content)
         
         output_file = 'output.pdf'
         result = generate(text, output_file)
