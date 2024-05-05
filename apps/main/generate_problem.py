@@ -61,32 +61,18 @@ def generate_parallel(text, options, output_file='output.pdf'):
     return quiz_data
 
 # 단일 GPT API 처리 로직
-def generate(text, options, output_file='output.pdf'):
+def generate(text, options=None, output_file='output.pdf'):
     # 사용자의 학습자료를 기반으로 vectordb 생성
     routes.retriever = embedding(text)
 
     # 텍스트를 한 덩어리로 처리, 사용자 커스텀 프롬프트 정보 전달
-    result = request_prompt(text, options)
-
-    # 결과를 저장할 배열 초기화
-    cases = []
-    questions = []
-    choices = []
-    answers = []
-    explanations = []
-    intents = []
+    result = request_prompt(text)
 
     # 결과를 저장할 리스트 초기화
     quiz_data = []
 
     # JSON 구조 파싱
     for item in result["quiz_questions"]:
-        cases.append(item["case"])
-        questions.append(item["question"])
-        choices.append(item["choices"])
-        answers.append(item["correct_answer"])
-        explanations.append(item["explanation"])
-        intents.append(item["intent"])
         quiz_data.append({
             "case": item["case"],
             "question": item["question"],
@@ -95,8 +81,5 @@ def generate(text, options, output_file='output.pdf'):
             "explanation": item["explanation"],
             "intent": item["intent"]
         })
-
-    # PDF 파일 생성
-    generate_pdf_with_answers(cases, questions, choices, answers, explanations, output_file)
 
     return quiz_data
