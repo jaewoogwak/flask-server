@@ -69,16 +69,25 @@ def upload_PDF():
         return jsonify({"error": "No file part"}), 400
     
     file = request.files['file']
-    # json을 str로 읽음
-    user_option_str = request.form['examSetting']
-    # str을 딕셔너리로 변환
-    user_option = json.loads(user_option_str)
     
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
     
+    try:
+        user_option_str = request.form['examSetting']
+        user_option = json.loads(user_option_str)
+        print(user_option)
+    except KeyError:
+        return jsonify({"error": "No examSetting found in the form data"}), 400
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON format in examSetting"}), 400
+    
     # PDF 파일의 내용을 읽음
     pdf_content = file.read()
-    text = PDF_to_openai_responses(pdf_content) if user_option['image'] == "true" else OCR_PDF(pdf_content)
+    text = OCR_PDF(pdf_content)
+    if user_option['image'] == "true":
+        text = PDF_to_openai_responses(pdf_content)
+    else:
+        text = OCR_PDF(pdf_content)
     result = generate(text, user_option)
     return jsonify(result), 200
