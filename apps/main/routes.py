@@ -18,15 +18,21 @@ def upload_image():
     if file.filename == '':
         return 'No selected file', 400
     
-    # json을 str로 읽음
-    user_option_str = request.form['examSetting']
-    # str을 딕셔너리로 변환
-    user_option = json.loads(user_option_str)
+    try:
+        user_option_str = request.form['examSetting']
+        user_option = json.loads(user_option_str)
+    except KeyError:
+        return jsonify({"error": "No examSetting found in the form data"}), 400
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON format in examSetting"}), 400
     
-    if file:
-        # 이미지 파일의 내용을 읽음
-        image_content = file.read()
-        text = image_to_openai_response(image_content) if user_option['image'] == "true" else OCR_image_byte(image_content)
+    # 이미지 파일의 내용을 읽음
+    image_content = file.read()
+        
+    if user_option['image'] == "true":
+        text = image_to_openai_response(image_content)
+    else:
+        text = OCR_image_byte(image_content)
         
         output_file = 'output.pdf'
         result = generate(text, output_file)
@@ -42,19 +48,26 @@ def upload_images():
         return 'No files part', 400
     
     files = request.files.getlist('files')
-    # json을 str로 읽음
-    user_option_str = request.form['examSetting']
-    # str을 딕셔너리로 변환
-    user_option = json.loads(user_option_str)
     
     if not files or any(file.filename == '' for file in files):
         return 'No selected files', 400
-
+    
+    try:
+        user_option_str = request.form['examSetting']
+        user_option = json.loads(user_option_str)
+    except KeyError:
+        return jsonify({"error": "No examSetting found in the form data"}), 400
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON format in examSetting"}), 400
+    
     # 파일을 바이트 컨텐츠로 변환
     images = [file.read() for file in files]
 
-    # 이미지 OCR 처리
-    text = images_to_openai_responses(images) if user_option['image'] == "true" else OCR_images_byte(images)
+    if user_option['image'] == "true":
+        text = images_to_openai_responses(images)
+    else:
+        text = OCR_images_byte(images)
+        
     output_file = 'output.pdf'
     result = generate(text, output_file)
     return jsonify(result), 200
@@ -76,7 +89,6 @@ def upload_PDF():
     try:
         user_option_str = request.form['examSetting']
         user_option = json.loads(user_option_str)
-        print(user_option)
     except KeyError:
         return jsonify({"error": "No examSetting found in the form data"}), 400
     except json.JSONDecodeError:
@@ -89,5 +101,6 @@ def upload_PDF():
         text = PDF_to_openai_responses(pdf_content)
     else:
         text = OCR_PDF(pdf_content)
+        
     result = generate(text, user_option)
     return jsonify(result), 200
