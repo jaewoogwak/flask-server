@@ -3,7 +3,6 @@ import io
 import pdf2image
 import concurrent.futures
 from openai import OpenAI
-from .prompt import img_detecting_prompt
 from .langchain import request_prompt_img_detecting
 
 client = OpenAI()
