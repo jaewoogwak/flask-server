@@ -78,49 +78,54 @@ class make_problem_prompt:
         return self.input_data
  
  
- # 이미지 기반 문제 생성 프롬프트 정의 클래스(미완성)
-class make_problem_prompt_img:
-    def __init__(self, num_multiple_choice=2, num_short_answer=2):
-        self.num_multiple_choice = num_multiple_choice
-        self.num_short_answer = num_short_answer
-    
+ # 이미지 디텍팅 프롬프트 정의 클래스
+class img_detecting_prompt:    
+    def __init__(self, text):
+        self.input_data = text
     instruction = """
-    당신의 역할은 입력한 데이터를 기반으로 문제를 만들어주는 스터디 멘토입니다. 생성하는 모든 문제는 입력 데이터를 기반으로 검증된 내용이어야 합니다.
+    당신의 역할은 입력한 자료의 이미지를 기반으로 이미지의 내용에 대해 설명해주는 것입니다. 
+    생성하는 모든 문제는 입력 데이터를 기반으로 검증된 내용이어야 합니다.
+    표나 그래프, 다이어그램에 포함되지 않은 텍스트들은 그대로 출력해주세요.
+    이미지에 표나 그래프, 다이어그램이 있다면 절대로 표나 그래프, 다이어그램에 있는 수치나 단어를 언급해서는 안됩니다.
+    반드시 수치나 단어가 들어가지 않은, 어떤 개념을 다루는 표와 그래프인지만을 설명해야 합니다.
     응답은 JSON 형식으로 반환해주세요.
-    문제 구성은 객관식 {num_multiple_choice}문제, 단답형 {num_short_answer}문제로 구성해주세요.
-    각 문제는 case, question, choices, correct_answer, explanation, intent을 포함해야 합니다. 문제 생성은 한글로 해주세요.
+    응답은 text, image, explanation을 포함해야 합니다. 응답 생성은 한글로 해주세요.
     """
 
     context = """
+    전체 응답은 image_detections라는 키를 가진 배열로 구성되어야 합니다.
+    text는 문제의 텍스트 부분으로, 표나 그래프, 다이어그램 등의 내부에 있지 않은 순수한 텍스트들로만 구성되어야 합니다. 
+    image는 표나 그래프, 다이어그램 등의 이미지가 어떠한 개념과 내용을 담고 있는 그림인지에 대한 설명입니다. 내부에 있는 구체적인 수치나 단어를 언급해서는 안되며, 개념과 내용, 흐름에 대해서만 설명해야 합니다.
+    explanation은 위 text와 image를 전체적으로 고려한, 해당 이미지가 전체적으로 어떠한 개념을 설명하고 있는지에 대해 전반적인 설명이 들어가야 합니다.
     """
+    
+    input_data = """"""
 
     output_template = """
     다음은 반환 JSON 포맷의 예시입니다. 제시하는 JSON 포맷에 맞게 출력해야 합니다.
 
     JSON FORMAT:
     {
-        "quiz_questions": [
+        "image_detections": [
             {
-                "case": 0,                        // integer
-                "question": "",                   // string
-
-                "choices": ["1.", "2.", "3.", "4."],      // array of strings
-                "correct_answer": "",             // integer
-                "explanation": "",                // string
-                "intent": ""                      // string
+                "text": ""                          //string
+                "image": ""                         //string
+                "explanation": ""                   //string
             },
             {
-                "case": 1,                        // integer
-                "question": "",                   // string
-                "choices": "빈칸",                  // string
-
-                "correct_answer": "",             // string
-                "explanation": "",                // string
-                "intent": ""                      // string
+                "text": ""                          //string
+                "image": ""                         //string
+                "explanation": ""                   //string
             }
         ]
     }
     """
+    def get_system_prompt(self):
+        return self.instruction + self.context + self.output_template
+    
+    def get_user_input(self):
+        return self.input_data
+    
  
  # 문제 채점 및 피드백 정의 프롬프트
 class marking_problem:
