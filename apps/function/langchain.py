@@ -8,12 +8,47 @@ from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks.base import BaseCallbackHandler
 from openai import OpenAI
+from langchain_core.output_parsers import JsonOutputParser
+from langchain.prompts import PromptTemplate
 from .prompt import make_problem_prompt, make_problem_prompt_img
 from config import KEY
 import json
 import os
 
 client = OpenAI()
+
+from langchain.chat_models import ChatOpenAI
+from langchain_core.output_parsers import JsonOutputParser
+from langchain.schema import (
+    HumanMessage,
+    SystemMessage
+)
+
+def test(contents, options=None):
+    llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0.4)
+    prompt = make_problem_prompt(contents, 5, 5)
+    system_prompt = prompt.get_system_prompt()
+    user_input = prompt.get_user_input()
+
+    output_parser = JsonOutputParser()
+
+    prompt_template = PromptTemplate(
+        template="{system_prompt}\n\n{format_instructions}\n\n{user_input}",
+        input_variables=["system_prompt", "user_input"],
+        partial_variables={"format_instructions": output_parser.get_format_instructions()},
+    )
+
+    _prompt = prompt_template.format(system_prompt=system_prompt, user_input=user_input)
+
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=_prompt)
+    ]
+
+    response = llm(messages)
+    parsed_response = output_parser.parse(response.content)
+
+    return parsed_response
 
 def request_prompt(contents, options):
     mutiple_num = options["multipleChoice"]
