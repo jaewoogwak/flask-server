@@ -11,6 +11,7 @@ from openai import OpenAI
 from langchain_core.output_parsers import JsonOutputParser
 from langchain.prompts import PromptTemplate
 from .prompt import make_problem_prompt, img_detecting_prompt
+
 from config import KEY
 import json
 import os
@@ -75,14 +76,25 @@ def request_prompt(contents, options):
     response = json.loads(response_json.choices[0].message.content)
     return response
 
-def request_prompt_img_detecting(message): 
-    # JSON 모드를 사용하여 num_questions개의 문제 생성 및 응답 받기
-    response_json = client.chat.completions.create(
-        model="gpt-4-turbo",  
-        response_format={"type": "json_object"},
-        messages=message
-    )
-    return response_json
+def request_prompt_img_detecting(contents):
+    llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0.4)
+    prompt = img_detecting_prompt(contents)
+    system_prompt = prompt.get_system_prompt()
+    user_input = prompt.get_user_input()
+
+    output_parser = JsonOutputParser()
+    
+    # 문제 생성을 위한 프롬프트 설정
+    message = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=[
+            {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{user_input}"}}
+        ])
+    ]
+    response = llm(message)
+    parsed_response = output_parser.parse(response.content)
+    
+    return parsed_response
 
 # 유저의 입력을 벡터화시키는 함수
 def embedding(user_input):

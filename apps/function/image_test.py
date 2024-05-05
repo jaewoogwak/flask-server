@@ -30,21 +30,10 @@ def send_image_to_openai(image, is_PDF=False):
     else:
         image_content = image
     base64_image = encode_image(image_content)
-    prompt = img_detecting_prompt(base64_image)
-    # 문제 생성을 위한 프롬프트 설정
-    message = [
-        {"role": "system", "content": prompt.get_system_prompt()},
-        {
-            "role": "user", 
-            "content": [
-                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{prompt.get_user_input()}"}}
-            ]
-        }
-    ]
     # OpenAI API 호출
-    response_json = request_prompt_img_detecting(message)
+    response_json = request_prompt_img_detecting(base64_image)
     print(response_json)
-    return response_json.choices[0].message.content
+    return response_json['image_detections']
 
 def image_to_openai_response(image_content):
     # 하나의 이미지에 대해 OpenAI 요청을 수행하고 결과를 저장합니다.
@@ -64,7 +53,7 @@ def images_to_openai_responses(images_content):
     for result in results:
         print(result)   
     
-    return " ".join(results)
+    return " ".join(map(str, results))
 
 def PDF_to_openai_responses(pdf_content):
     # PDF를 이미지로 변환
@@ -78,4 +67,4 @@ def PDF_to_openai_responses(pdf_content):
     #for result in results:
     #    print(result)   
     
-    return " ".join(results)
+    return " ".join(map(str, results))
