@@ -7,27 +7,29 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks.base import BaseCallbackHandler
-from openai import OpenAI
 from langchain_core.output_parsers import JsonOutputParser
 from langchain.prompts import PromptTemplate
 from .prompt import make_problem_prompt, img_detecting_prompt
-
-from config import KEY
-import json
-import os
-
-client = OpenAI()
-
-from langchain.chat_models import ChatOpenAI
 from langchain_core.output_parsers import JsonOutputParser
 from langchain.schema import (
     HumanMessage,
     SystemMessage
 )
+from config import KEY
+import os
 
-def test(contents, options=None):
+def request_prompt(contents, options=None):
+    if options is None:
+        return {"error": "Options are missing. Please provide options."}
+    
+    mutiple_num = options["multipleChoice"]
+    short_num = options["shortAnswer"]
+    custom_prompt = options["custom_prompt"]
+    
     llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0.4)
-    prompt = make_problem_prompt(contents, 5, 5)
+    prompt = make_problem_prompt(contents, mutiple_num, short_num)
+    prompt.set_custom_prompt(custom_prompt)
+    
     system_prompt = prompt.get_system_prompt()
     user_input = prompt.get_user_input()
 
@@ -50,31 +52,6 @@ def test(contents, options=None):
     parsed_response = output_parser.parse(response.content)
 
     return parsed_response
-
-def request_prompt(contents, options):
-    mutiple_num = options["multipleChoice"]
-    short_num = options["shortAnswer"]
-    custom_prompt = options["custom_prompt"]
-    
-    prompt = make_problem_prompt(contents, mutiple_num, short_num)
-    prompt.set_custom_prompt(custom_prompt)
-    
-    # 문제 생성을 위한 프롬프트 설정
-    message = [
-        {"role": "system", "content": prompt.get_system_prompt()},
-        {"role": "user", "content": prompt.get_user_input()}
-    ]
-
-    # JSON 모드를 사용하여 num_questions개의 문제 생성 및 응답 받기
-    response_json = client.chat.completions.create(
-        model="gpt-4-turbo",  
-        response_format={"type": "json_object"},
-        messages=message
-    )
-
-    # JSON 문자열을 파이썬 딕셔너리로 변환
-    response = json.loads(response_json.choices[0].message.content)
-    return response
 
 def request_prompt_img_detecting(contents):
     llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0.4)
