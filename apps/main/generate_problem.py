@@ -66,7 +66,7 @@ def generate(text, options=None, output_file='output.pdf'):
     routes.retriever = embedding(text)
 
     # 텍스트를 한 덩어리로 처리, 사용자 커스텀 프롬프트 정보 전달
-    result = request_prompt(text)
+    result = request_prompt(text, options)
 
     # 결과를 저장할 리스트 초기화
     quiz_data = []
