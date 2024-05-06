@@ -8,48 +8,47 @@ class make_problem_prompt:
         self.num_short_answer = num_short_answer
     
     instruction = """
-    당신의 역할은 입력한 데이터를 기반으로 문제를 만들어주는 스터디 멘토입니다. 생성하는 모든 문제는 입력 데이터를 기반으로 검증된 내용이어야 합니다.
-    응답은 JSON 형식으로 반환해주세요.
-    문제 구성은 객관식 {num_multiple_choice}문제, 단답형 {num_short_answer}문제로 구성해주세요.
-    각 문제는 case, question, choices, correct_answer, explanation, intent을 포함해야 합니다. 문제 생성은 한글로 해주세요.
+    Your role is as a study mentor who creates questions based on the data you enter. All questions you create must be validated based on the input data.
+    Please return responses in JSON format.
+    Questions should be organized into multiple choice {num_multiple_choice} questions and short answer {num_short_answer} questions.
+    Each question must contain case, question, choices, correct_answer, explanation, and intent. Please create questions in Korean.
     """
 
     context = """
-    전체 응답은 quiz_questions이라는 키를 가진 배열로 구성되어야 합니다.
-    객관식은 선지를 고르는 유형, 단답형은 키워드가 답이되는 유형입니다.
-    case는 문제의 유형으로, 객관식 문제의 경우 0, 단답식 문제의 경우 1로 설정해주세요.
-    question은 입력 데이터를 기반으로 생성한 문제 명입니다. 객관식, 단답형에 맞게 알맞은 문제 제시로 설정되었는지 검증하여 설정해주세요.
-    choice는 문제 선택지로, 객관식인 경우 문제 선택지는 4개이고, 단답형의 경우 '빈칸'으로 표시합니다. 객관식 선택지를 넘버링으로 시작해주세요("1.", "2.", "3.", "4.")
-    correct_answer는 문제의 정답 입니다. 객관식의 경우 정답 선택 번호를 제시해주세요.
-    explanation은 정답에 대한 해설입니다. 문제의 정답이 왜 그런지 설명해주세요.
-    intent는 문제 출제 의도에 대한 내용입니다. 문제를 생성할 때 문제를 푸는 사람에게 요구하는 것, 문제의 의도된 해결 방식을 기술합니다.
+    The entire response should be organized into an array with the key quiz_questions.
+    Multiple choice is the type of question, and short answer is the type where a keyword is the answer.
+    case is the type of question, set to 0 for multiple choice questions and 1 for short answer questions.
+    question is the name of the question you generate based on the input data.
+    choice is the question choices, set to 4 for multiple choice and '빈칸' for short answer.
+    correct_answer is the correct answer to the question. For multiple choice, provide the correct answer choice number.
+    explanation is an explanation for the correct answer.
+    intent is the intent of the question. Describe what you're asking the person solving the question to do when you create it, and how the question is intended to be solved.
     """
 
     input_data = """"""
 
     output_template = """
-    다음은 반환 JSON 포맷의 예시입니다. 제시하는 JSON 포맷에 맞게 출력해야 합니다.
+    The following is an example of the return JSON format. Make sure to output to the JSON format you present.
 
     JSON FORMAT:
     {
         "quiz_questions": [
             {
-                "case": 0,                        // integer
-                "question": "",                   // string
+                "case": 0, // integer
+                "question": "",  // string
 
-                "choices": ["1.", "2.", "3.", "4."],      // array of strings
-                "correct_answer": "",             // integer
-                "explanation": "",                // string
-                "intent": ""                      // string
+                "choices": ["1.", "2.", "3.", "4."], // array of strings
+                "correct_answer": "", // integer
+                "explanation": "", // string
+                "intent": ""  // string
             },
             {
-                "case": 1,                        // integer
-                "question": "",                   // string
-                "choices": "빈칸",                  // string
-
-                "correct_answer": "",             // string
-                "explanation": "",                // string
-                "intent": ""                      // string
+                "case": 1, // integer
+                "question": "", // string
+                "choices": "빈칸", // string
+                "correct_answer": "", // string
+                "explanation": "", // string
+                "intent": "" // string
             }
         ]
     }
@@ -129,48 +128,133 @@ class img_detecting_prompt:
  
  # 문제 채점 및 피드백 정의 프롬프트
 class marking_problem:
-    instruction = """
-    너의 역할은 사용자가 풀이한 문제 대한 피드백을 해주는 멘토입니다. 응답은 JSON 형식으로 반환해주세요. 사용자가 풀이한 문제에 대한 정보를 입력으로 주어지면
-    입력에 대한 피드백을 반환하세요. 사용자가 풀이한 문제에 대한 정보는 JSON 형식으로 제공됩니다. 입력 JSON의 각 키 값에 대한 설명을 제공합니다.
-    index는 문제 번호 입니다. question은 문제 명입니다. answer는 문제의 답입니다. user_answer는 사용자가 입력한 문제 답 입니다. explanation은 문제 해설입니다. intent는 문제 출제 의도에 대한 내용입니다.
-    응답으로 피드백의 개수는 입력한 문제 수와 동일합니다. 피드백 내용으로는 index, feedback, iscorrect으로 구성됩니다.
-    """
-    
-    context = """
-    전체 응답은 output이라는 키를 가진 배열로 구성되어야 합니다.
-    index는 문제 번호로 입력 받은 문제의 번호와 동일합니다. 해당 인덱스와 입력된 문제가 매치되어 각 문제에 피드백이 정확히 들어갈 수 있도록 합니다.
-    feedback은 사용자에게 줄 해당 문제에 대한 피드백입니다. 피드백 내용은 다음 조건을 포함하도록 제시합니다.
-    조건 : 1. 사용자가 선택한 답과
-    그리고 검증한 내용을 사용자에게 제시하며 문제의 의도, 문제 해설을 참고하여 사용자에게 다음에도 비슷한 문제를 맞출 수 있도록 조언해주는 내용을 피드백에 추가합니다.
-    iscorrect는 정답 여부로 문제의 정답과 사용자가 선택한 정답을 비교하여 정답으로 인정될 수 있는지 검토합니다. 문제의 정답과 사용자가 입력한 답이 정답의 범주 내에 있다면 정답으로 간주하도록 합니다. 
-    이 과정은 매우 엄격하게 이뤄져야 하며, 주어진 문제 맥락 및 정보를 파악하여 정답이 맞는지 검증합니다. 사용자가 입력한 답과 문제의 답을 비교하였을 때 정답으로 인정된다면 1, 아니라면 0으로 설정합니다.
-    """
-    
-    input_data = """"""
-    
-    output_template = """
-    다음은 반환 JSON 포맷의 예시입니다. 제시하는 JSON 포맷에 맞게 출력해야 합니다.
+    objective_intro = """
+        You are a tutor who gives feedback on the wrong question and tells you the direction to study.
 
-    JSON FORMAT:
-    {
-        "output": [
-            {
-                "index": 1,                        // integer
-                "feedback": ""                     // string
-                "iscorrect": 0                     // integer
-            },
-            {
-                "index": 3,                        // integer
-                "feedback": "",                    // string
-                "iscorrect": 1                     // integer
-            }
-        ]
-    }
+        The full response must be returned in JSON format consisting of key-value pairs "index", "feedback", and "isCorrect".
+        Any other JSON key except all "index" values, values must be double-quoted.
+
+        "index" should return the value of the entered "index".
+
+        "feedback" is a feedback on the problem to give to the user.
+        You should give feedback by referring to the commentary presented to see why the wrong option is wrong and why the right option is correct.
+        In addition, the intention of the problem and what additional studies are needed should be included in the feedback.
+
+        "isCorrect" indicates correct answer.
+        You must return 1 if the value of "isCorrect" entered is "True" or 0 if "False".
+
+        All feedback must be in Korean.
+        The feedback should be in one line without changing the line.
     """
+
+    subjective_intro = """
+        You are a strict teacher.
+        All you have to do is score and give feedback on the answers to the short answer questions written by the student.
+
+        The full response must be returned in JSON format consisting of key-value pairs "index", "feedback", and "isCorrect".
+        Any other JSON key except all "index" values, values must be double-quoted. 
+
+        "index" can be returned to the value of the input "index".
+
+        "feedback" is a feedback on the problem to give to the user.
+        The feedback should include both whether it can be recognized as a correct answer and feedback to advise the user to solve similar problems next time.
+        Whether or not the correct answer is recognized is reviewed by comparing the correct answer in the question with the correct answer selected by the user.
+        The correct answer to the question is "correctAnswer" and the user's correct answer is "userAnswer".
+        If the correct answer to the question and the answer entered by the user fall within the category of the correct answer, consider it as the correct answer.
+        This process should be very strict, and the given context and information should be identified, verified, and presented to the user. 
+        And if the answer entered by the student is wrong, you should give feedback by referring to why it is wrong, what is the correct answer, and the commentary presented.
+        Also, the intention of the problem and what additional studies are needed should be included in the feedback.
+
+        "isCorrect" is the correct answer, and when comparing the answer entered by the user with the answer of the question, it is set to 1 if it is recognized as the correct answer, or 0 if not.
+        "isCorrect" must be either 1 or 0 and must be strictly case sensitive.
+
+        Please make sure to answer in Korean.
+    """
+
+    example = """
+        This are some examples of how you talk:
+        
+        Example 1
+        Human: {example_question1}
+        You: {example_answer1}
+
+        Example 2
+        Human: {example_question2}
+        You: {example_answer2}
+
+        Example 3
+        Human: {example_question3}
+        You: {example_answer3}
+    """
+
+    start = """
+        start now!
+
+        Human: {question}
+        You:
+    """
+
+    objective_final = """
+        {intro}
     
-    def __init__(self):
-        pass
+        {example}
+
+        {start}
+    """
+
+    subjective_final = """
+        {intro}
+
+        {start}
+    """
+
+    example_question1 = """{
+            "index":0,
+            "question":"다음 중 복합 리터럴을 정의하는 연산자를 지원하는 C의 버전은?",
+            "choices":["1. C89","2. C99","3. C11","4. C++"],
+            "correctAnswer":"2",
+            "userAnswer":"3",
+            "isCorrect":"False",
+            "explanation":"복합 리터럴은 C99 규격에서 새롭게 도입된 기능입니다. 이를 통해 배열이나 구조체 같은 데이터 타입을 초기화할 수 있습니다.",
+            "intent":"프로그래밍 언어의 버전별 특성과 변경사항을 이해하는 능력 검증"
+    }"""
     
-    def set_input_data(self, problems):
-        # Json을 파싱한 사전 자료형(problems)을 텍스트로 변환
-        self.input_data = json.dumps(problems, indent=4)
+    example_answer1 = """{
+            "index": 0,
+            "feedback": "잘못 고른 선택지는 '3. C11'입니다. 복합 리터럴을 정의하는 연산자를 지원하는 C의 버전은 '2. C99'입니다. 복합 리터럴은 C99 규격에서 새롭게 도입된 기능으로, 배열이나 구조체와 같은 데이터 타입을 초기화할 수 있게 해줍니다. 이 문제는 프로그래밍 언어의 버전별 특성과 변경사항을 이해하는 능력을 검증하기 위해 출제되었습니다. C언어의 버전별 특성과 변경사항에 대해 더 공부해보는 것이 좋을 것 같습니다.",
+            "isCorrect": 0
+    }"""
+    
+    example_question2 = """{
+            "index":4,
+            "question":"어느 언어가 후위 증감 연산자 "++"와 "--"을 지원합니까?",
+            "choices":["1. FORTRAN","2. Ada","3. C","4. Pascal"],
+            "correctAnswer":"3",
+            "userAnswer":"4",
+            "isCorrect":"False",
+            "explanation":"C 언어는 후위 증감 연산자 "++"와 "--"을 제공합니다. 이 연산자들은 변수의 값을 증가하거나 감소시킨 후 평가됩니다.",
+            "intent":"후위 증감 연산자를 지원하는 언어에 대한 이해를 묻는 문제입니다."
+    }"""
+
+    example_answer2 = """{
+            "index": 4,
+            "feedback": "잘못 고른 선택지는 '4. Pascal'입니다. Pascal은 후위 증감 연산자를 제공하지 않습니다. 후위 증감 연산자 '++'와 '--'을 지원하는 언어는 '3. C'입니다. 이 연산자들은 변수의 값을 증가하거나 감소시킨 후 평가됩니다. 문제의 의도는 후위 증감 연산자를 지원하는 언어에 대한 이해를 확인하는 것입니다. 후위 증감 연산자에 대해 더 공부하시면 도움이 될 것입니다.",
+            "isCorrect": 0
+    }"""
+    
+    example_question3 = """{
+            "index":5,
+            "question":"어느 연산자가 C언어에서 우선순위가 가장 높습니까?",
+            "choices":["1. +","2. /","3. sizeof","4. &&"],
+            "correctAnswer":"3",
+            "userAnswer":"2",
+            "isCorrect":"False",
+            "explanation":"C 언어에서 "sizeof" 연산자는 가장 높은 우선순위를 가지는 연산자 중 하나입니다. 이 연산자는 피연산자의 크기를 측정합니다.",
+            "intent":"C 언어 연산자의 우선순위에 대한 이해를 평가하는 문제입니다."
+    }"""
+
+    example_answer3 = """{
+            "index": 5,
+            "feedback": "잘못 고른 선택지는 '2. /'입니다. '/'는 'sizeof' 연산자보다 우선순위가 낮습니다. 정답은 '3. sizeof'입니다. C언어에서 'sizeof' 연산자는 가장 높은 우선순위를 가지는 연산자 중 하나입니다. 이 연산자는 피연산자의 크기를 측정하는 기능을 합니다. 이 문제는 C언어 연산자의 우선순위에 대한 이해를 평가하기 위해 출제되었습니다. C언어의 연산자 우선순위에 대해 더 공부가 필요한 것 같습니다.",
+            "isCorrect": 0
+    }"""
