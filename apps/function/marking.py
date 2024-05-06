@@ -4,6 +4,7 @@ from langchain.prompts.pipeline import PipelinePromptTemplate
 from concurrent.futures import ThreadPoolExecutor
 from config import KEY
 from .prompt import marking_problem
+import json
 
 chat = ChatOpenAI(
             openai_api_key= KEY,
@@ -72,7 +73,8 @@ def feedback_objective(input_json):
         "question": input_json
     })
 
-    return result.content
+    json_result = json.loads(result.content)
+    return json_result
 
 
 # 2-2. 주관식 문제 채점 및 피드백 작성
@@ -96,4 +98,5 @@ def feedback_subjective(input_json):
         }
     )
 
-    return result.content
+    json_result = json.loads(result.content)
+    return json_result
