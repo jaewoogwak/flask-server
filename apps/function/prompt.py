@@ -19,7 +19,7 @@ class make_problem_prompt:
     Multiple choice is the type of question, and short answer is the type where a keyword is the answer.
     case is the type of question, set to 0 for multiple choice questions and 1 for short answer questions.
     question is the name of the question you generate based on the input data.
-    choice is the question choices, set to 4 for multiple choice and '빈칸' for short answer.
+    choice is the question choices, set to 4 for multiple choice and '빈칸' for short answer. Label multiple-choice statements (“1.”, “2.”, “3.”, “4.”).
     correct_answer is the correct answer to the question. For multiple choice, provide the correct answer choice number.
     explanation is an explanation for the correct answer.
     intent is the intent of the question. Describe what you're asking the person solving the question to do when you create it, and how the question is intended to be solved.
