@@ -59,11 +59,19 @@ def request_prompt(contents, options=None):
     return parsed_response
 
 def request_prompt_img_detecting(contents, options=None):
-    if options is None:
-        return {"error": "Options are missing. Please provide options."}
+    #if options is None:
+    #    return {"error": "Options are missing. Please provide options."}
     
-    llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0.4)
+    custom_prompt = options["custom_prompt"]
+
+    llm = ChatOpenAI(
+            model_name="gpt-4-turbo", 
+            temperature=0.2,
+            streaming = False,
+    )
+
     prompt = img_detecting_prompt(contents)
+    prompt.set_custom_prompt(custom_prompt)
     system_prompt = prompt.get_system_prompt()
     user_input = prompt.get_user_input()
 
