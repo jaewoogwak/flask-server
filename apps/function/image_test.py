@@ -20,7 +20,7 @@ def encode_image(image):
     """ 이미지를 base64 문자열로 인코딩합니다. """
     return base64.b64encode(image).decode('utf-8')
 
-def send_image_to_openai(image, is_PDF=False):
+def send_image_to_openai(image, is_PDF=False, user_option=None):
     """ OpenAI API를 사용하여 이미지에 대한 설명을 요청하고, 결과의 'content'만 반환합니다. """
     if is_PDF:
         image_content = io.BytesIO()
@@ -30,7 +30,7 @@ def send_image_to_openai(image, is_PDF=False):
         image_content = image
     base64_image = encode_image(image_content)
     # OpenAI API 호출
-    response_json = request_prompt_img_detecting(base64_image)
+    response_json = request_prompt_img_detecting(base64_image, user_option)
     print(response_json)
     return response_json['image_detections']
 
@@ -54,13 +54,13 @@ def images_to_openai_responses(images_content):
     
     return " ".join(map(str, results))
 
-def PDF_to_openai_responses(pdf_content):
+def PDF_to_openai_responses(pdf_content, user_option=None):
     # PDF를 이미지로 변환
     images = convert_pdf_to_images(pdf_content)
 
     # 각 이미지에 대해 OpenAI 요청을 수행하고 결과를 저장합니다.
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        results = list(executor.map(lambda image: send_image_to_openai(image, is_PDF=True), images))
+        results = list(executor.map(lambda image: send_image_to_openai(image, is_PDF=True, user_option=user_option), images))
 
     # 결과 출력
     #for result in results:
