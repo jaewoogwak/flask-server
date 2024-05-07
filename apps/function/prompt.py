@@ -128,7 +128,7 @@ class img_detecting_prompt:
     
     def set_custom_prompt(self, user_prompt):
         if user_prompt.strip() :
-            self.context += "\n\n문제 생성 중 추가적인 요구 : " + user_prompt
+            self.context += "\n\n이미지에 대한 추가적인 설명 : " + user_prompt
     
  
  # 문제 채점 및 피드백 정의 프롬프트
