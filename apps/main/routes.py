@@ -30,7 +30,7 @@ def upload_image():
     image_content = file.read()
         
     if user_option['isTextCentered'] == 1:
-        text = image_to_openai_response(image_content)
+        text = image_to_openai_response(image_content, user_option)
     else:
         text = OCR_image_byte(image_content)
         
@@ -64,7 +64,7 @@ def upload_images():
     images = [file.read() for file in files]
 
     if user_option['isTextCentered'] == 1:
-        text = images_to_openai_responses(images)
+        text = images_to_openai_responses(images, user_option)
     else:
         text = OCR_images_byte(images)
         
@@ -88,7 +88,9 @@ def upload_PDF():
     
     try:
         user_option_str = request.form['examSetting']
+        print(user_option_str)
         user_option = json.loads(user_option_str)
+        print(user_option)
     except KeyError:
         return jsonify({"error": "No examSetting found in the form data"}), 400
     except json.JSONDecodeError:
@@ -96,9 +98,9 @@ def upload_PDF():
     
     # PDF 파일의 내용을 읽음
     pdf_content = file.read()
-    text = OCR_PDF(pdf_content)
+
     if user_option['isTextCentered'] == 1:
-        text = PDF_to_openai_responses(pdf_content)
+        text = PDF_to_openai_responses(pdf_content, user_option)
     else:
         text = OCR_PDF(pdf_content)
         
