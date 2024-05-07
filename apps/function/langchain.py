@@ -59,8 +59,8 @@ def request_prompt(contents, options=None):
     return parsed_response
 
 def request_prompt_img_detecting(contents, options=None):
-    #if options is None:
-    #    return {"error": "Options are missing. Please provide options."}
+    if options is None:
+        return {"error": "Options are missing. Please provide options."}
     
     custom_prompt = options["custom_prompt"]
 
@@ -84,6 +84,7 @@ def request_prompt_img_detecting(contents, options=None):
             {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{user_input}"}}
         ])
     ]
+    
     response = llm(message)
     parsed_response = output_parser.parse(response.content)
     
