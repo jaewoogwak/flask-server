@@ -11,7 +11,7 @@ class make_problem_prompt:
     Your role is as a study mentor who creates questions based on the data you enter. All questions you create must be validated based on the input data.
     Please return responses in JSON format.
     Questions should be organized into multiple choice {num_multiple_choice} questions and short answer {num_short_answer} questions.
-    Each question must contain case, question, choices, correct_answer, explanation, and intent. Unify language in output
+    Each question must contain case, question, choices, correct_answer, explanation, and intent. Answer in korean
     """
 
     context = """
