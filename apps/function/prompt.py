@@ -71,7 +71,8 @@ class make_problem_prompt:
         ) + self.context + self.output_template
 
     def set_custom_prompt(self, user_prompt):
-        self.context += "\n\n문제 생성 중 추가적인 요구 : " + user_prompt
+        if user_prompt.strip() :
+            self.context += "\n\n문제 생성 중 추가적인 요구 : " + user_prompt
     
     def get_user_input(self):
         return self.input_data
@@ -124,6 +125,10 @@ class img_detecting_prompt:
     
     def get_user_input(self):
         return self.input_data
+    
+    def set_custom_prompt(self, user_prompt):
+        if user_prompt.strip() :
+            self.context += "\n\n문제 생성 중 추가적인 요구 : " + user_prompt
     
  
  # 문제 채점 및 피드백 정의 프롬프트
