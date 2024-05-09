@@ -7,6 +7,7 @@ from .prompt import marking_problem
 import json
 
 chat = ChatOpenAI(
+            model_name="gpt-4-turbo",
             openai_api_key= KEY,
             temperature=0.1,
             streaming=True
