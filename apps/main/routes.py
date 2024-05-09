@@ -1,5 +1,6 @@
 from . import main
-from flask import request, send_file, jsonify
+from flask import request, send_file, jsonify, Response, request, stream_with_context
+import time
 from ..function.ocr import OCR_image_byte, OCR_images_byte, OCR_PDF
 from .generate_problem import generate
 from ..function.image_test import image_to_openai_response, images_to_openai_responses, PDF_to_openai_responses
@@ -106,3 +107,17 @@ def upload_PDF():
         
     result = generate(text, user_option)
     return jsonify(result), 200
+
+@main.route('/progress', methods=['GET'])
+def progress():
+    """
+    로직 수행 내용 생략, 프로그레스바 테스트 용도
+    """
+    return Response(stream_with_context(generate_progress()), mimetype='text/event-stream')
+
+def generate_progress():
+    progress = 0
+    while progress <= 100:
+        yield f"data:{progress}\n\n"
+        progress += 10
+        time.sleep(1)  # 프로그레스 업데이트 간격 (예: 1초)
