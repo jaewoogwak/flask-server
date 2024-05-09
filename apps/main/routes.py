@@ -121,3 +121,6 @@ def generate_progress():
         yield f"data:{progress}\n\n"
         progress += 10
         time.sleep(1)  # 프로그레스 업데이트 간격 (예: 1초)
+        
+    # 프로그레스가 100에 도달하면 종료 이벤트 전송
+    yield "data:complete\n\n"
