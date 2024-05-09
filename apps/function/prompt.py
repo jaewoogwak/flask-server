@@ -76,8 +76,8 @@ class make_problem_prompt:
     
     def get_user_input(self):
         return self.input_data
- 
- 
+
+
 # 이미지 디텍팅 프롬프트 정의 클래스
 class img_detecting_prompt:    
     def __init__(self, text):
@@ -130,8 +130,6 @@ class img_detecting_prompt:
         if user_prompt.strip() :
             self.context += "\n\nAdditional description of the image : " + user_prompt
 
- 
- # 문제 채점 및 피드백 정의 프롬프트
 class marking_problem:
     objective_intro = """
         You are a tutor who gives feedback on the wrong question and tells you the direction to study.
@@ -153,43 +151,32 @@ class marking_problem:
     """
 
     subjective_intro = """
-        You are a strict teacher.
-        All you have to do is score and give feedback on the answers to the short answer questions written by the student.
+        You're an excellent tutor.
+        Your job is to grade and provide feedback on students' answers to short-answer questions they submit.
 
-        The full response must be returned in JSON format consisting of key-value pairs "index", "feedback", and "isCorrect".
-        Any other JSON key except all "index" values, values must be double-quoted. 
+        Below is a question, a student response, and a model answer. When you evaluate a student's response, consider these points when grading
 
-        "index" can be returned to the value of the input "index".
+        1. Accept an answer as correct if it includes the key concepts and keywords the question asks for, even if it's not identical to the model answer. 
+        2. Even if the sentence structure or word choice is different from the model answer, accept the answer as correct if it conveys a similar message.
+        3. Award extra credit if your answer goes into more detail and depth than the model answer.
+        4. If you leave out key concepts or include irrelevant content, you may lose points.
 
-        "feedback" is a feedback on the problem to give to the user.
-        The feedback should include both whether it can be recognized as a correct answer and feedback to advise the user to solve similar problems next time.
-        Whether or not the correct answer is recognized is reviewed by comparing the correct answer in the question with the correct answer selected by the user.
-        The correct answer to the question is "correctAnswer" and the user's correct answer is "userAnswer".
-        If the correct answer to the question and the answer entered by the user fall within the category of the correct answer, consider it as the correct answer.
-        This process should be very strict, and the given context and information should be identified, verified, and presented to the user. 
-        And if the answer entered by the student is wrong, you should give feedback by referring to why it is wrong, what is the correct answer, and the commentary presented.
-        Also, the intention of the problem and what additional studies are needed should be included in the feedback.
+        Based on the above criteria, carefully review students' responses and treat similar responses as correct, but award points based on how closely they match the model answer.
 
-        "isCorrect" is the correct answer, and when comparing the answer entered by the user with the answer of the question, it is set to 1 if it is recognized as the correct answer, or 0 if not.
-        "isCorrect" must be either 1 or 0 and must be strictly case sensitive.
+        The full response should be returned in JSON format with the key-value pairs "index", "feedback", and "isCorrect".
+        All other JSON keys and values must be enclosed in double quotes, except for the value of "index". 
 
-        Please make sure to answer in Korean.
-    """
+        "index" should return the value of "index" as it was entered.
 
-    example = """
-        This are some examples of how you talk:
-        
-        Example 1
-        Human: {example_question1}
-        You: {example_answer1}
+        "feedback" is the feedback for the question that you want to give to the user.
+        The feedback should mention the user's answer and tell them whether it's correct or incorrect.
+        If the answer they entered is incorrect, the feedback should tell them why it is incorrect, what the correct answer is, and refer to the commentary provided.
+        If incorrect, the feedback should also include the intent of the question and what additional study is needed.
 
-        Example 2
-        Human: {example_question2}
-        You: {example_answer2}
+        "isCorrect" is an indicator of whether the answer is correct, set to 1 if the user's answer is recognized as correct when compared to the answer in the question, and 0 otherwise.
+        "isCorrect" must result in a value of either 1 or 0 and is strictly case sensitive.
 
-        Example 3
-        Human: {example_question3}
-        You: {example_answer3}
+        Answers must be in Korean.
     """
 
     start = """
@@ -199,67 +186,8 @@ class marking_problem:
         You:
     """
 
-    objective_final = """
-        {intro}
-    
-        {example}
-
-        {start}
-    """
-
-    subjective_final = """
+    final = """
         {intro}
 
         {start}
     """
-
-    example_question1 = """{
-            "index":0,
-            "question":"다음 중 복합 리터럴을 정의하는 연산자를 지원하는 C의 버전은?",
-            "choices":["1. C89","2. C99","3. C11","4. C++"],
-            "correctAnswer":"2",
-            "userAnswer":"3",
-            "isCorrect":"False",
-            "explanation":"복합 리터럴은 C99 규격에서 새롭게 도입된 기능입니다. 이를 통해 배열이나 구조체 같은 데이터 타입을 초기화할 수 있습니다.",
-            "intent":"프로그래밍 언어의 버전별 특성과 변경사항을 이해하는 능력 검증"
-    }"""
-    
-    example_answer1 = """{
-            "index": 0,
-            "feedback": "잘못 고른 선택지는 '3. C11'입니다. 복합 리터럴을 정의하는 연산자를 지원하는 C의 버전은 '2. C99'입니다. 복합 리터럴은 C99 규격에서 새롭게 도입된 기능으로, 배열이나 구조체와 같은 데이터 타입을 초기화할 수 있게 해줍니다. 이 문제는 프로그래밍 언어의 버전별 특성과 변경사항을 이해하는 능력을 검증하기 위해 출제되었습니다. C언어의 버전별 특성과 변경사항에 대해 더 공부해보는 것이 좋을 것 같습니다.",
-            "isCorrect": 0
-    }"""
-    
-    example_question2 = """{
-            "index":4,
-            "question":"어느 언어가 후위 증감 연산자 "++"와 "--"을 지원합니까?",
-            "choices":["1. FORTRAN","2. Ada","3. C","4. Pascal"],
-            "correctAnswer":"3",
-            "userAnswer":"4",
-            "isCorrect":"False",
-            "explanation":"C 언어는 후위 증감 연산자 "++"와 "--"을 제공합니다. 이 연산자들은 변수의 값을 증가하거나 감소시킨 후 평가됩니다.",
-            "intent":"후위 증감 연산자를 지원하는 언어에 대한 이해를 묻는 문제입니다."
-    }"""
-
-    example_answer2 = """{
-            "index": 4,
-            "feedback": "잘못 고른 선택지는 '4. Pascal'입니다. Pascal은 후위 증감 연산자를 제공하지 않습니다. 후위 증감 연산자 '++'와 '--'을 지원하는 언어는 '3. C'입니다. 이 연산자들은 변수의 값을 증가하거나 감소시킨 후 평가됩니다. 문제의 의도는 후위 증감 연산자를 지원하는 언어에 대한 이해를 확인하는 것입니다. 후위 증감 연산자에 대해 더 공부하시면 도움이 될 것입니다.",
-            "isCorrect": 0
-    }"""
-    
-    example_question3 = """{
-            "index":5,
-            "question":"어느 연산자가 C언어에서 우선순위가 가장 높습니까?",
-            "choices":["1. +","2. /","3. sizeof","4. &&"],
-            "correctAnswer":"3",
-            "userAnswer":"2",
-            "isCorrect":"False",
-            "explanation":"C 언어에서 "sizeof" 연산자는 가장 높은 우선순위를 가지는 연산자 중 하나입니다. 이 연산자는 피연산자의 크기를 측정합니다.",
-            "intent":"C 언어 연산자의 우선순위에 대한 이해를 평가하는 문제입니다."
-    }"""
-
-    example_answer3 = """{
-            "index": 5,
-            "feedback": "잘못 고른 선택지는 '2. /'입니다. '/'는 'sizeof' 연산자보다 우선순위가 낮습니다. 정답은 '3. sizeof'입니다. C언어에서 'sizeof' 연산자는 가장 높은 우선순위를 가지는 연산자 중 하나입니다. 이 연산자는 피연산자의 크기를 측정하는 기능을 합니다. 이 문제는 C언어 연산자의 우선순위에 대한 이해를 평가하기 위해 출제되었습니다. C언어의 연산자 우선순위에 대해 더 공부가 필요한 것 같습니다.",
-            "isCorrect": 0
-    }"""
