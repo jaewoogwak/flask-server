@@ -4,6 +4,7 @@ from langchain.prompts.pipeline import PipelinePromptTemplate
 from concurrent.futures import ThreadPoolExecutor
 from config import KEY
 from .prompt import marking_problem
+from langchain_core.output_parsers import JsonOutputParser
 import json
 
 chat = ChatOpenAI(
@@ -49,14 +50,17 @@ def feedback_objective(input_json):
         pipeline_prompts=prompts
     )
 
+    output_parser = JsonOutputParser()
+
     chain = full_prompt | chat
 
     result = chain.invoke({
         "question": input_json
     })
 
-    json_result = json.loads(result.content)
-    return json_result
+    parsed_response = output_parser.parse(result.content)
+    
+    return parsed_response
 
 
 # 2-2. 주관식 문제 채점 및 피드백 작성
@@ -73,11 +77,14 @@ def feedback_subjective(input_json):
         pipeline_prompts=prompts
     )
 
+    output_parser = JsonOutputParser()
+
     chain = full_prompt | chat
 
     result = chain.invoke({
         "question": input_json
     })
 
-    json_result = json.loads(result.content)
-    return json_result
+    parsed_response = output_parser.parse(result.content)
+    
+    return parsed_response
