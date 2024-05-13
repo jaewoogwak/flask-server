@@ -8,7 +8,7 @@ from langchain_core.output_parsers import JsonOutputParser
 import json
 
 chat = ChatOpenAI(
-            model_name="gpt-4-turbo",
+            model_name="gpt-4o",
             openai_api_key= KEY,
             temperature=0.1,
             streaming=True

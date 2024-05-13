@@ -27,7 +27,7 @@ def request_prompt(contents, options=None):
     custom_prompt = options["custom_prompt"]
     
     llm = ChatOpenAI(
-            model_name="gpt-4-turbo", 
+            model_name="gpt-4o", 
             temperature=0.2,
             streaming = False,
             
@@ -65,7 +65,7 @@ def request_prompt_img_detecting(contents, options=None):
     custom_prompt = options["custom_prompt"]
 
     llm = ChatOpenAI(
-            model_name="gpt-4-turbo", 
+            model_name="gpt-4o", 
             temperature=0.2,
             streaming = False,
     )
