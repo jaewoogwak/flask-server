@@ -2,6 +2,7 @@ from ..function.langchain import request_prompt, embedding
 from ..function.pdf_processing import generate_pdf_with_answers
 from ..chatbot import routes
 from concurrent.futures import ThreadPoolExecutor
+import json
 
 # 병렬 처리를 이용한 GPT API 처리
 def generate_parallel(text, options, output_file='output.pdf'):
@@ -67,7 +68,9 @@ def generate(text, options=None, output_file='output.pdf'):
 
     # 텍스트를 한 덩어리로 처리, 사용자 커스텀 프롬프트 정보 전달
     result = request_prompt(text, options)
-
+    result_str = json.dumps(result, ensure_ascii=False)
+    
+    routes.retriever = embedding(result_str)
     # 결과를 저장할 리스트 초기화
     quiz_data = []
 
