@@ -9,7 +9,7 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 current_directory = os.path.dirname(os.path.abspath(__file__))
 # Google Cloud Vision API 설정
 google_vision_setting = {
-    "credentials_path": os.path.join(current_directory, 'serious-conduit-413006-58f255767a58.json')
+    "credentials_path": os.path.join(current_directory, 'quiet-canto-423305-h7-0b6b6b7de996.json')
 }
 # 환경 변수 설정
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = google_vision_setting["credentials_path"]
