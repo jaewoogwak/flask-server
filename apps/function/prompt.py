@@ -6,12 +6,13 @@ class make_problem_prompt:
         self.input_data = text
         self.num_multiple_choice = num_multiple_choice
         self.num_short_answer = num_short_answer
+        # 기본값 설정
+        self.boundary = " " 
     
     instruction = """
-    Your role is as a study mentor who creates questions based on the data you enter. All questions you create must be validated based on the input data.
-    Please return responses in JSON format.
-    Questions should be organized into multiple choice {num_multiple_choice} questions and short answer {num_short_answer} questions.
-    Each question must contain case, question, choices, correct_answer, explanation, and intent. Answer in korean
+    Your role is as a study mentor who creates questions based on the data you enter. {boundary}.
+    Questions should consist of {num_multiple_choice} multiple-choice questions and {num_short_answer} short-answer questions.
+    Each question must contain case, question, choices, correct_answer, explanation, and intent. Answer in korean.
     """
 
     context = """
@@ -64,8 +65,15 @@ class make_problem_prompt:
     def set_customize_context(self, user_prompt):
         self.context += user_prompt
 
+    def set_freedom_size(self, choice):
+        if choice == 0:
+            self.boundary = "All questions you create must be validated based on the input data"
+        else:
+            self.boundary = "Use external knowledge in addition to your input data"
+    
     def get_system_prompt(self):
         return self.instruction.format(
+            boundary=self.boundary,
             num_multiple_choice=self.num_multiple_choice,
             num_short_answer=self.num_short_answer
         ) + self.context + self.output_template
@@ -190,4 +198,86 @@ class marking_problem:
         {intro}
 
         {start}
+    """
+
+
+class make_objective:
+    def __init__(self, text, num_multiple_choice=2):
+        self.input_data = text
+        self.num_multiple_choice = num_multiple_choice
+    
+    instruction = """
+    Your role is as a study mentor who creates questions based on the data you enter. All questions you create must be validated based on the input data.
+    Questions should be organized into multiple choice {num_multiple_choice} questions. Answer in korean.
+    """
+
+    context = """
+    The entire response should be organized into an array with the key quiz_questions.
+    case is the type of question, set to 0.
+    question is the name of the question you generate based on the input data.
+    choice is the question choices, set to 4 for multiple choice. Label multiple-choice statements (“1.”, “2.”, “3.”, “4.”).
+    correct_answer is the correct answer to the question. Provide the correct answer choice number.
+    explanation is an explanation for the correct answer.
+    intent is the intent of the question. Describe what you're asking the person solving the question to do when you create it, and how the question is intended to be solved.
+    """
+
+    input_data = """"""
+
+    output_template = """
+    The following is an example of the return JSON format. Make sure to output to the JSON format you present.
+    JSON FORMAT:
+    {
+        "quiz_questions": [
+            {
+                "case": 0, // integer
+                "question": "",  // string
+
+                "choices": ["1.", "2.", "3.", "4."], // array of strings
+                "correct_answer": "", // integer
+                "explanation": "", // string
+                "intent": ""  // string
+            },
+        ]
+    }
+    """
+    
+class make_subjective:
+    def __init__(self, text, num_short_answer=2):
+        self.input_data = text
+        self.num_short_answer = num_short_answer
+    
+    instruction = """
+    Your role is as a study mentor who creates questions based on the data you enter. All questions you create must be validated based on the input data.
+    Questions should be organized into short answer {num_short_answer} questions. Answer in korean.
+    """
+
+    context = """
+    The entire response should be organized into an array with the key quiz_questions.
+    answer is the type where a keyword is the answer.
+    case is the type of question, set to 1.
+    question is the name of the question you generate based on the input data.
+    choice is the question choices, set to '빈칸'.
+    correct_answer is the correct answer to the question.
+    explanation is an explanation for the correct answer.
+    intent is the intent of the question. Describe what you're asking the person solving the question to do when you create it, and how the question is intended to be solved.
+    """
+
+    input_data = """"""
+
+    output_template = """
+    The following is an example of the return JSON format. Make sure to output to the JSON format you present.
+
+    JSON FORMAT:
+    {
+        "quiz_questions": [
+            {
+                "case": 1, // integer
+                "question": "", // string
+                "choices": "빈칸", // string
+                "correct_answer": "", // string
+                "explanation": "", // string
+                "intent": "" // string
+            },
+        ]
+    }
     """

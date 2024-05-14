@@ -25,6 +25,7 @@ def request_prompt(contents, options=None):
     mutiple_num = options["multipleChoice"]
     short_num = options["shortAnswer"]
     custom_prompt = options["custom_prompt"]
+    LectureOnly = options["isLectureOnly"]
     
     llm = ChatOpenAI(
             model_name="gpt-4o", 
@@ -32,8 +33,10 @@ def request_prompt(contents, options=None):
             streaming = False,
             
         )
+    
     prompt = make_problem_prompt(contents, mutiple_num, short_num)
     prompt.set_custom_prompt(custom_prompt)
+    prompt.set_freedom_size(LectureOnly)
     
     system_prompt = prompt.get_system_prompt()
     user_input = prompt.get_user_input()
