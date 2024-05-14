@@ -31,7 +31,7 @@ def send_image_to_openai(image, is_PDF=False, user_option=None):
     base64_image = encode_image(image_content)
     # OpenAI API 호출
     response_json = request_prompt_img_detecting(base64_image, user_option)
-    print(response_json)
+    # print(response_json)
     return response_json['image_detections']
 
 def image_to_openai_response(image_content):
@@ -39,7 +39,7 @@ def image_to_openai_response(image_content):
     result = send_image_to_openai(image_content)
     
     # 결과 출력
-    print(result)
+    # print(result)
     
     return result
 
@@ -49,8 +49,8 @@ def images_to_openai_responses(images_content):
         results = list(executor.map(send_image_to_openai, images_content))
 
     # 결과 출력
-    for result in results:
-        print(result)   
+    # for result in results:
+    #     print(result)   
     
     return " ".join(map(str, results))
 
