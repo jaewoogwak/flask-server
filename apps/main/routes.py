@@ -89,9 +89,9 @@ def upload_PDF():
     
     try:
         user_option_str = request.form['examSetting']
-        print(user_option_str)
+        # print(user_option_str)
         user_option = json.loads(user_option_str)
-        print(user_option)
+        # print(user_option)
     except KeyError:
         return jsonify({"error": "No examSetting found in the form data"}), 400
     except json.JSONDecodeError:
