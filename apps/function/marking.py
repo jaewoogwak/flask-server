@@ -62,6 +62,7 @@ def feedback_split(input_json, objective_full_prompt, subjective_full_prompt, ou
 def feedback_objective(input_json, full_prompt, output_parser):
     chain = full_prompt | chat
     result = chain.invoke({"question": input_json})
+    
     parsed_response = output_parser.parse(result.content)
     return parsed_response
 
