@@ -116,13 +116,13 @@ class img_detecting_prompt:
     {
         "image_detections": [
             {
-                "text": ""                          //string
-                "image": ""                         //string
+                "text": "",                          //string
+                "image": "",                         //string
                 "explanation": ""                   //string
             },
             {
-                "text": ""                          //string
-                "image": ""                         //string
+                "text": "",                          //string
+                "image": "",                         //string
                 "explanation": ""                   //string
             }
         ]
