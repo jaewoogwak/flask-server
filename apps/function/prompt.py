@@ -142,20 +142,20 @@ class img_detecting_prompt:
 # 피드백 생성 프롬프트 정의 클래스
 class marking_problem:
     objective_intro = """
-        You are a tutor providing feedback on incorrect questions and pointing out learning directions.
+        You are a tutor who provides feedback on incorrect questions and provides direction for learning.
 
         The full response should be returned in JSON format, consisting of the key-value pairs "index", "feedback", and "isCorrect".
-        Except for the "index" value, the values of all other JSON keys must be enclosed in double quotes.
 
-        "index" should return the value of "index" as entered.
+        "index" should return the "index" value as entered.
 
-        "feedback" is the feedback on the question to give to the student.
-        If the question is incorrect, you must include an explanation of why the student's incorrect choice is incorrect.
-        It should also include why the correct answer choice is correct.
-        The feedback should also include the intent of the question and what further research is needed.
+        "feedback" is the feedback for the question you want to give the student.
+        If the student selects an incorrect option, you MUST include an explanation of why the option is incorrect.
+        It should also include why the correct answer choice is the correct answer.
+        The feedback should also address the intent of the question and include which concepts need further study.
 
-        "isCorrect" indicates whether the answer is correct or not.
-        It should return 1 if the entered value of "correctAnswer" and the value of "userAnswer" are the same, and 0 otherwise.
+        "isCorrect" indicates whether the response is correct or not.
+        You should return 1 if the value of "correctAnswer" and the value of "userAnswer" you entered are the same, otherwise return 0.
+        The isCorrect value above must be of type int.
 
         All feedback must be written in Korean.
         Feedback must be written on a single line with no line breaks.
@@ -175,7 +175,6 @@ class marking_problem:
         Based on the above criteria, carefully review students' responses and treat similar responses as correct, but award points based on how closely they match the model answer.
 
         The full response should be returned in JSON format with the key-value pairs "index", "feedback", and "isCorrect".
-        All other JSON keys and values must be enclosed in double quotes, except for the value of "index". 
 
         "index" should return the value of "index" as it was entered.
 
