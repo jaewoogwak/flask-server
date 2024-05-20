@@ -10,20 +10,19 @@ class make_problem_prompt:
         self.boundary = " " 
     
     instruction = """
-    Your role is as a study mentor who creates questions based on the data you enter. {boundary}.
-    Questions should consist of {num_multiple_choice} multiple-choice questions and {num_short_answer} short-answer questions.
-    Each question must contain case, question, choices, correct_answer, explanation, and intent. Answer in korean.
+    Your role is as a study mentor who creates Quizzes. {boundary}.
+    Quizs should consist of {num_multiple_choice} multiple-choice Quizzes and {num_short_answer} short-answer Quizzes. Answer in korean.
     """
 
     context = """
+    Create Quiz based on the following conditions :
     The entire response should be organized into an array with the key "quiz_questions".
-    Multiple choice is the type of question, and short answer is the type where a keyword is the answer.
-    "case" is the type of question, set to 0 for multiple choice questions and 1 for short answer questions.
-    "question" is the name of the question you generate based on the input data. For multiple choice, explicitly state in the question that you want to choose the closest correct answer.
-    "choice" is the question choices, set to 4 for multiple choice and '빈칸' for short answer. Label multiple-choice statements (“1.”, “2.”, “3.”, “4.”).
-    "correct_answer" is the correct answer to the question. For multiple choice, provide the correct answer choice number.
+    "case" is the type of Quiz, set to 0 for multiple-choice Quizzes and 1 for short-answer Quizzes.
+    "question" is the name of the Quiz. For multiple choice, explicitly state in the Quiz that you want to choose the closest correct answer.
+    "choice" is the Quiz choices, set to 4 for multiple choice and '빈칸' for short answer. Label multiple-choice statements (“1.”, “2.”, “3.”, “4.”).
+    "correct_answer" is the correct answer to the Quiz. For multiple choice, provide the correct answer choice number.
     "explanation" is an explanation for the correct answer.
-    "intent" is the intent of the question. Describe what you're asking the person solving the question to do when you create it, and how the question is intended to be solved.
+    "intent" is the intent of the Quiz. Describe what you're asking the person solving the Quiz to do when you create it, and how the Quiz is intended to be solved.
     """
 
     input_data = """"""
@@ -55,19 +54,19 @@ class make_problem_prompt:
     }
     """
 
-    def set_num_questions(self, num_questions):
-        self.num_multiple_choice = num_questions // 2
-        self.num_short_answer = num_questions - self.num_multiple_choice
+    def set_num_Quizs(self, num_Quizs):
+        self.num_multiple_choice = num_Quizs // 2
+        self.num_short_answer = num_Quizs - self.num_multiple_choice
 
     def set_user_input(self, text):
-        self.input_data = text
+        self.input_data = "<Content start>" + text + "<Content end>"
         
     def set_customize_context(self, user_prompt):
         self.context += user_prompt
 
     def set_freedom_size(self, choice):
         if choice == 0:
-            self.boundary = "All questions you create must be validated based on the input data"
+            self.boundary = "All Quizzes you create must be validated based on the input data"
         else:
             self.boundary = "Use external knowledge in addition to your input data"
     
@@ -102,7 +101,7 @@ class img_detecting_prompt:
 
     context = """
     The entire response should consist of an array with the key image_detections.
-    text is the text portion of the question and should consist of pure text only, not inside tables, graphs, diagrams, etc. 
+    text is the text portion of the Quiz and should consist of pure text only, not inside tables, graphs, diagrams, etc. 
     image should never refer to specific figures, examples, or words inside the picture, but only to what concept the picture is intended to illustrate.
     The explanation should be a general description of what concept the image is illustrating as a whole, taking into account the text above and the image as a whole.
     """
@@ -142,16 +141,16 @@ class img_detecting_prompt:
 # 피드백 생성 프롬프트 정의 클래스
 class marking_problem:
     objective_intro = """
-        You are a tutor who provides feedback on incorrect questions and provides direction for learning.
+        You are a tutor who provides feedback on incorrect Quizs and provides direction for learning.
 
         The full response should be returned in JSON format, consisting of the key-value pairs "index", "feedback", and "isCorrect".
 
         "index" should return the "index" value as entered.
 
-        "feedback" is the feedback for the question you want to give the student.
+        "feedback" is the feedback for the Quiz you want to give the student.
         If the student selects an incorrect option, you MUST include an explanation of why the option is incorrect.
         It should also include why the correct answer choice is the correct answer.
-        The feedback should also address the intent of the question and include which concepts need further study.
+        The feedback should also address the intent of the Quiz and include which concepts need further study.
 
         "isCorrect" indicates whether the response is correct or not.
         You should return 1 if the value of "correctAnswer" and the value of "userAnswer" you entered are the same, otherwise return 0.
@@ -163,11 +162,11 @@ class marking_problem:
 
     subjective_intro = """
         You're an excellent tutor.
-        Your job is to grade and provide feedback on students' answers to short-answer questions they submit.
+        Your job is to grade and provide feedback on students' answers to short-answer Quizs they submit.
 
-        Below is a question, a student response, and a model answer. When you evaluate a student's response, consider these points when grading
+        Below is a Quiz, a student response, and a model answer. When you evaluate a student's response, consider these points when grading
 
-        1. Accept an answer as correct if it includes the key concepts and keywords the question asks for, even if it's not identical to the model answer. 
+        1. Accept an answer as correct if it includes the key concepts and keywords the Quiz asks for, even if it's not identical to the model answer. 
         2. Even if the sentence structure or word choice is different from the model answer, accept the answer as correct if it conveys a similar message.
         3. Award extra credit if your answer goes into more detail and depth than the model answer.
         4. If you leave out key concepts or include irrelevant content, you may lose points.
@@ -178,12 +177,12 @@ class marking_problem:
 
         "index" should return the value of "index" as it was entered.
 
-        "feedback" is the feedback for the question that you want to give to the user.
+        "feedback" is the feedback for the Quiz that you want to give to the user.
         The feedback should mention the user's answer and tell them whether it's correct or incorrect.
         If the answer they entered is incorrect, the feedback should tell them why it is incorrect, what the correct answer is, and refer to the commentary provided.
-        If incorrect, the feedback should also include the intent of the question and what additional study is needed.
+        If incorrect, the feedback should also include the intent of the Quiz and what additional study is needed.
 
-        "isCorrect" is an indicator of whether the answer is correct, set to 1 if the user's answer is recognized as correct when compared to the answer in the question, and 0 otherwise.
+        "isCorrect" is an indicator of whether the answer is correct, set to 1 if the user's answer is recognized as correct when compared to the answer in the Quiz, and 0 otherwise.
         "isCorrect" must result in a value of either 1 or 0 and is strictly case sensitive.
 
         Answers must be in Korean.
@@ -192,7 +191,7 @@ class marking_problem:
     start = """
         start now!
 
-        Human: {question}
+        Human: {Quiz}
         You:
     """
 
@@ -209,18 +208,18 @@ class make_objective:
         self.num_multiple_choice = num_multiple_choice
     
     instruction = """
-    Your role is as a study mentor who creates questions based on the data you enter. All questions you create must be validated based on the input data.
-    Questions should be organized into multiple choice {num_multiple_choice} questions. Answer in korean.
+    Your role is as a study mentor who creates Quizs based on the data you enter. All Quizs you create must be validated based on the input data.
+    Quizs should be organized into multiple choice {num_multiple_choice} Quizs. Answer in korean.
     """
 
     context = """
-    The entire response should be organized into an array with the key quiz_questions.
-    case is the type of question, set to 0.
-    question is the name of the question you generate based on the input data.
-    choice is the question choices, set to 4 for multiple choice. Label multiple-choice statements (“1.”, “2.”, “3.”, “4.”).
-    correct_answer is the correct answer to the question. Provide the correct answer choice number.
+    The entire response should be organized into an array with the key quiz_Quizs.
+    case is the type of Quiz, set to 0.
+    Quiz is the name of the Quiz you generate based on the input data.
+    choice is the Quiz choices, set to 4 for multiple choice. Label multiple-choice statements (“1.”, “2.”, “3.”, “4.”).
+    correct_answer is the correct answer to the Quiz. Provide the correct answer choice number.
     explanation is an explanation for the correct answer.
-    intent is the intent of the question. Describe what you're asking the person solving the question to do when you create it, and how the question is intended to be solved.
+    intent is the intent of the Quiz. Describe what you're asking the person solving the Quiz to do when you create it, and how the Quiz is intended to be solved.
     """
 
     input_data = """"""
@@ -229,10 +228,10 @@ class make_objective:
     The following is an example of the return JSON format. Make sure to output to the JSON format you present.
     JSON FORMAT:
     {
-        "quiz_questions": [
+        "quiz_Quizs": [
             {
                 "case": 0, // integer
-                "question": "",  // string
+                "Quiz": "",  // string
 
                 "choices": ["1.", "2.", "3.", "4."], // array of strings
                 "correct_answer": "", // integer
@@ -249,19 +248,19 @@ class make_subjective:
         self.num_short_answer = num_short_answer
     
     instruction = """
-    Your role is as a study mentor who creates questions based on the data you enter. All questions you create must be validated based on the input data.
-    Questions should be organized into short answer {num_short_answer} questions. Answer in korean.
+    Your role is as a study mentor who creates Quizs based on the data you enter. All Quizs you create must be validated based on the input data.
+    Quizs should be organized into short answer {num_short_answer} Quizs. Answer in korean.
     """
 
     context = """
-    The entire response should be organized into an array with the key quiz_questions.
+    The entire response should be organized into an array with the key quiz_Quizs.
     answer is the type where a keyword is the answer.
-    case is the type of question, set to 1.
-    question is the name of the question you generate based on the input data.
-    choice is the question choices, set to '빈칸'.
-    correct_answer is the correct answer to the question.
+    case is the type of Quiz, set to 1.
+    Quiz is the name of the Quiz you generate based on the input data.
+    choice is the Quiz choices, set to '빈칸'.
+    correct_answer is the correct answer to the Quiz.
     explanation is an explanation for the correct answer.
-    intent is the intent of the question. Describe what you're asking the person solving the question to do when you create it, and how the question is intended to be solved.
+    intent is the intent of the Quiz. Describe what you're asking the person solving the Quiz to do when you create it, and how the Quiz is intended to be solved.
     """
 
     input_data = """"""
@@ -271,10 +270,10 @@ class make_subjective:
 
     JSON FORMAT:
     {
-        "quiz_questions": [
+        "quiz_Quizs": [
             {
                 "case": 1, // integer
-                "question": "", // string
+                "Quiz": "", // string
                 "choices": "빈칸", // string
                 "correct_answer": "", // string
                 "explanation": "", // string
