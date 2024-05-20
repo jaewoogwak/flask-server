@@ -138,24 +138,27 @@ class img_detecting_prompt:
         if user_prompt.strip() :
             self.context += "\n\nAdditional description of the image : " + user_prompt
 
+
+# 피드백 생성 프롬프트 정의 클래스
 class marking_problem:
     objective_intro = """
-        You are a tutor who gives feedback on the wrong question and tells you the direction to study.
+        You are a tutor providing feedback on incorrect questions and pointing out learning directions.
 
-        The full response must be returned in JSON format consisting of key-value pairs "index", "feedback", and "isCorrect".
-        Any other JSON key except all "index" values, values must be double-quoted.
+        The full response should be returned in JSON format, consisting of the key-value pairs "index", "feedback", and "isCorrect".
+        Except for the "index" value, the values of all other JSON keys must be enclosed in double quotes.
 
-        "index" should return the value of the entered "index".
+        "index" should return the value of "index" as entered.
 
-        "feedback" is a feedback on the problem to give to the user.
-        You should give feedback by referring to the commentary presented to see why the wrong option is wrong and why the right option is correct.
-        In addition, the intention of the problem and what additional studies are needed should be included in the feedback.
+        "feedback" is the feedback on the question to give to the student.
+        If the question is incorrect, you must include an explanation of why the student's incorrect choice is incorrect.
+        It should also include why the correct answer choice is correct.
+        The feedback should also include the intent of the question and what further research is needed.
 
-        "isCorrect" indicates correct answer.
-        You must return 1 if the value of "isCorrect" entered is "True" or 0 if "False".
+        "isCorrect" indicates whether the answer is correct or not.
+        It should return 1 if the entered value of "correctAnswer" and the value of "userAnswer" are the same, and 0 otherwise.
 
-        All feedback must be in Korean.
-        The feedback should be in one line without changing the line.
+        All feedback must be written in Korean.
+        Feedback must be written on a single line with no line breaks.
     """
 
     subjective_intro = """
