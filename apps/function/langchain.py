@@ -29,7 +29,7 @@ def request_prompt(contents, options=None):
     
     llm = ChatOpenAI(
             model_name="gpt-4o", 
-            temperature=0.2,
+            temperature=0.7,
             streaming = False,
             
         )
