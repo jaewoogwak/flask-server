@@ -35,8 +35,7 @@ def upload_image():
     else:
         text = OCR_image_byte(image_content)
         
-        output_file = 'output.pdf'
-        result = generate(text, output_file)
+        result = generate(text, user_option)
         return jsonify(result), 200
 
 # 이미지 여러 장 처리
@@ -69,8 +68,7 @@ def upload_images():
     else:
         text = OCR_images_byte(images)
         
-    output_file = 'output.pdf'
-    result = generate(text, output_file)
+    result = generate(text, user_option)
     return jsonify(result), 200
 
 # PDF 파일 처리 라우팅
