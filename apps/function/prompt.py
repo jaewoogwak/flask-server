@@ -29,7 +29,8 @@ class make_problem_prompt:
 
     output_template = """
     The following is an example of the return JSON format. Make sure to output to the JSON format you present.
-
+    Ensure that all characters in the text are properly escaped to be valid JSON. This includes escaping backslashes (\\), double quotes ("), new lines (\\n), and any other characters that need to be escaped in JSON strings.
+    
     JSON FORMAT:
     {
         "quiz_questions": [
@@ -110,6 +111,7 @@ class img_detecting_prompt:
 
     output_template = """
     The following is an example of the return JSON format. Make sure to output to the JSON format you present.
+    Ensure that all characters in the text are properly escaped to be valid JSON. This includes escaping backslashes (\\), double quotes ("), new lines (\\n), and any other characters that need to be escaped in JSON strings.
 
     JSON FORMAT:
     {
@@ -226,6 +228,8 @@ class make_objective:
 
     output_template = """
     The following is an example of the return JSON format. Make sure to output to the JSON format you present.
+    Ensure that all characters in the text are properly escaped to be valid JSON. This includes escaping backslashes (\\), double quotes ("), new lines (\\n), and any other characters that need to be escaped in JSON strings.
+    
     JSON FORMAT:
     {
         "quiz_questions": [
@@ -267,6 +271,7 @@ class make_subjective:
 
     output_template = """
     The following is an example of the return JSON format. Make sure to output to the JSON format you present.
+    Ensure that all characters in the text are properly escaped to be valid JSON. This includes escaping backslashes (\\), double quotes ("), new lines (\\n), and any other characters that need to be escaped in JSON strings.
 
     JSON FORMAT:
     {
