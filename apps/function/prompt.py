@@ -67,9 +67,9 @@ class make_problem_prompt:
 
     def set_freedom_size(self, choice):
         if choice == 0:
-            self.boundary = "All Quizzes you create must be validated based on the input data"
-        else:
             self.boundary = "Use external knowledge in addition to your input data"
+        else:
+            self.boundary = "All Quizzes you create must be validated based on the input data"
     
     def get_system_prompt(self):
         return self.instruction.format(
