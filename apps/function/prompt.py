@@ -172,8 +172,7 @@ class marking_problem:
 
         1. Accept an answer as correct if it includes the key concepts and keywords the question asks for, even if it's not identical to the model answer. 
         2. Even if the sentence structure or word choice is different from the model answer, accept the answer as correct if it conveys a similar message.
-        3. Award extra credit if your answer goes into more detail and depth than the model answer.
-        4. If you leave out key concepts or include irrelevant content, you may lose points.
+        3. If you leave out key concepts or include irrelevant content, you may lose points.
 
         Based on the above criteria, carefully review students' responses and treat similar responses as correct, but award points based on how closely they match the model answer.
 
