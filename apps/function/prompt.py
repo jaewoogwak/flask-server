@@ -11,7 +11,9 @@ class make_problem_prompt:
     
     instruction = """
     Your role is as a study mentor who creates Quizzes. {boundary}.
-    Quizs should consist of {num_multiple_choice} multiple-choice Quizzes and {num_short_answer} short-answer Quizzes. Answer in korean.
+    Quizs should consist of {num_multiple_choice} multiple-choice Quizzes and {num_short_answer} short-answer Quizzes.
+    Please make Quiz without overlapping questions.
+    Answer in korean.
     """
 
     context = """
