@@ -89,7 +89,12 @@ def upload_PDF():
     Returns:
         json: 
         {
-            "result": "object"  # 생성된 문제 및 기타 결과 데이터
+            "case": int,                            # 문제 유형, 0이면 객관식, 1이면 주관식
+            "question": "string",                   # 문제 명(제목)
+            "choices": array of string or "string", # 문제 선지, 객관식의 경우 선택지 string이 배열로 주어지고, 주관식의 경우 "빈칸"으로 반환
+            "correct_answer": int or "string",      # 문제의 답, 객관식의 경우 선택지 번호(int), 주관식의 경우 정답 string 반환  
+            "explanation": "string",                # 문제의 답에 대한 해설
+            "intent": "string"                      # 문제 생성 의도
         }
         
     Exceptions:
