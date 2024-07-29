@@ -3,6 +3,9 @@ from ..function.pdf_processing import generate_pdf_with_answers
 from ..chatbot import routes
 from concurrent.futures import ThreadPoolExecutor
 import json
+from typing import List, Dict, Any
+
+# TODO: 병렬처리 코드가 필요 없어짐에 따라 병렬처리 함수(generate_parallel) 삭제 필요
 
 # 병렬 처리를 이용한 GPT API 처리
 def generate_parallel(text, options, output_file='output.pdf'):
@@ -61,8 +64,19 @@ def generate_parallel(text, options, output_file='output.pdf'):
     generate_pdf_with_answers(cases, questions, choices, answers, explanations, output_file)
     return quiz_data
 
-# 단일 GPT API 처리 로직
-def generate(text, options=None, output_file='output.pdf'):
+# TODO: 사용자 별 vectordb 유지하는 방안으로 변경시 코드 수정 필요
+def generate(text: str, options: Dict[str, Any] = None, output_file: str = 'output.pdf') -> List[Dict[str, Any]]:
+    """
+    입력된 학습자료 text를 기반으로 chatGPT를 사용하여 문제 생성을 하는 함수
+
+    Args:
+        text (str): _description_
+        options (Dict[str, Any], optional): 문제 생성 옵션을 포함한 딕셔너리. Defaults to None.
+        output_file (str, optional): 생성된 문제를 저장할 출력 파일 이름. Defaults to 'output.pdf'.
+
+    Returns:
+        List[Dict[str, Any]]: 생성된 문제와 관련 데이터의 리스트
+    """
     # 사용자의 학습자료를 기반으로 vectordb 생성
     routes.retriever = embedding(text)
 
@@ -70,6 +84,7 @@ def generate(text, options=None, output_file='output.pdf'):
     result = request_prompt(text, options)
     result_str = json.dumps(result, ensure_ascii=False)
     
+    # 생성한 문제도 vectordb에 추가
     routes.retriever = embedding(result_str)
     # 결과를 저장할 리스트 초기화
     quiz_data = []
@@ -85,4 +100,5 @@ def generate(text, options=None, output_file='output.pdf'):
             "intent": item["intent"]
         })
 
+    # LIST형으로 생성한 문제(DICT)들을 반환
     return quiz_data
