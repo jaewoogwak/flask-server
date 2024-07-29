@@ -70,7 +70,7 @@ def generate(text: str, options: Dict[str, Any] = None, output_file: str = 'outp
     입력된 학습자료 text를 기반으로 chatGPT를 사용하여 문제 생성을 하는 함수
 
     Args:
-        text (str): _description_
+        text (str): 학습자료 내용
         options (Dict[str, Any], optional): 문제 생성 옵션을 포함한 딕셔너리. Defaults to None.
         output_file (str, optional): 생성된 문제를 저장할 출력 파일 이름. Defaults to 'output.pdf'.
 
