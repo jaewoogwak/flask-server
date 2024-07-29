@@ -65,14 +65,13 @@ def generate_parallel(text, options, output_file='output.pdf'):
     return quiz_data
 
 # TODO: 사용자 별 vectordb 유지하는 방안으로 변경시 코드 수정 필요
-def generate(text: str, options: Dict[str, Any] = None, output_file: str = 'output.pdf') -> List[Dict[str, Any]]:
+def generate(text: str, options: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     """
     입력된 학습자료 text를 기반으로 chatGPT를 사용하여 문제 생성을 하는 함수
 
     Args:
         text (str): 학습자료 내용
         options (Dict[str, Any], optional): 문제 생성 옵션을 포함한 딕셔너리. Defaults to None.
-        output_file (str, optional): 생성된 문제를 저장할 출력 파일 이름. Defaults to 'output.pdf'.
 
     Returns:
         List[Dict[str, Any]]: 생성된 문제와 관련 데이터의 리스트
