@@ -47,6 +47,8 @@ def answer_question():
         {
             "answer": "string"  # 질문에 대한 답변 내용
         }
+        
+    Exceptions:
     """
     
     # retriever가 None이 아닌, 한 번이라도 vectordb를 생성한 경우
