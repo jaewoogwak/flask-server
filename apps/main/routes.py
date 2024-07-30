@@ -82,8 +82,20 @@ def upload_PDF():
     
     Request Body:
         {
-            "file": "file object",  # 업로드된 PDF 파일
-            "examSetting": "string" # JSON 형식의 시험 설정 옵션
+            "file": "file object",                  # 업로드된 PDF 파일
+            "examSetting":                          # JSON 형식의 시험 설정 옵션, TODO: 안 쓰는 옵션은 수정 필요
+            {
+                {
+                    multipleChoice: int,            # 객관식 수
+                    shortAnswer: int,               # 단답형 수 
+                    essay: int,                     # 서술형 수
+                    examNumber: int,                # 문제 총 수
+                    custom_prompt: "stirng",        # 사용자 커스텀 프롬프트
+                    custom_image_prompt: "string",  # 이미지 처리에 대한 추가적인 커스텀 프롬프트
+                    isTextCentered: int,            # 이미지 기반으로 자료를 인식하면 1, OCR 기반으로 자료를 인식하면 0
+                    isLectureOnly: int,             # 문제 생성 시 지식 범위를 자료에 한정하면 1, 외부 추가적인 지식을 사용하면 0
+                }
+            }   
         }
     
     Returns:
