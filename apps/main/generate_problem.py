@@ -1,5 +1,4 @@
 from ..function.langchain import request_prompt, embedding
-from ..function.pdf_processing import generate_pdf_with_answers
 from ..chatbot import routes
 from concurrent.futures import ThreadPoolExecutor
 import json
