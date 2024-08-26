@@ -28,7 +28,7 @@ def request_prompt(contents, options=None):
     LectureOnly = options["isLectureOnly"]
     
     llm = ChatOpenAI(
-            model_name="gpt-4o", 
+            model_name="gpt-4o-2024-08-06", 
             temperature=0.7,
             streaming = False,
             
@@ -68,7 +68,7 @@ def request_prompt_img_detecting(contents, options=None):
     custom_prompt = options["custom_prompt"]
 
     llm = ChatOpenAI(
-            model_name="gpt-4o", 
+            model_name="gpt-4o-2024-08-06", 
             temperature=0.2,
             streaming = False,
     )
