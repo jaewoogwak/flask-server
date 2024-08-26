@@ -14,24 +14,6 @@ google_vision_setting = {
 # 환경 변수 설정
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = google_vision_setting["credentials_path"]
 
-
-# 운영체제별 PDF 생성 설정
-wk_setting = {
-    'Windows': {
-        'OS': 'Windows',
-        'PATH': 'C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe'
-    },
-    'Darwin': {  # macOS
-        'OS': 'Darwin',
-        'PATH': None  # macOS에서는 경로 설정이 필요 없을 수 있음
-    },
-    'Linux': {
-        'OS': 'Linux',
-        'PATH': None  # 기본값, Linux 등 다른 운영체제
-    }
-}[platform.system()]
-
-
 # GPT API KEY 설정, 환경 변수 설정으로 KEY를 하드코딩 X
 # linux의 경우
 # terminal에서 'nano ~/.bashrc' 입력 후 'export OPENAI_API_KEY="GPT_API_KEY"'으로 환경변수 설정
