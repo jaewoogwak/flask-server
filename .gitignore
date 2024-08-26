@@ -173,7 +173,7 @@ cython_debug/
 .DS_Store
 
 ### secret key ###
-quiet-canto-423305-h7-0b6b6b7de996.json
+*.json
 
 ### dummy data ###
 *.pdf
