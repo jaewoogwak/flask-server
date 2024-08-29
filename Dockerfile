@@ -1,5 +1,5 @@
 # 기본 이미지로 python 공식 이미지 사용
-FROM python:3:11-slim
+FROM python:3.11-slim
 
 # 작업 디렉토리 설정
 WORKDIR /app
@@ -19,4 +19,4 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 컨테이너 실행 시 실행될 명령어
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--workers=4"]
