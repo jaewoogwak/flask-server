@@ -1,5 +1,3 @@
-import json
-
 # 문제 생성 프롬프트 정의 클래스
 class make_problem_prompt:
     def __init__(self, text, num_multiple_choice=2, num_short_answer=2):
