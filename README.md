@@ -12,11 +12,14 @@
             __init__.py
             routes.py
         /function
+            image_test.py
             langchain.py
+            marking.py
             ocr.py
-            pdf_processing.py
+            prompt.py
         /main
             __init__.py
+            generate_problem.py
             routes.py
         models.py
     /static
@@ -41,9 +44,10 @@
     /chatbot : 챗봇 기능을 위한 라우팅 구현
     /feedback : 문제 피드백 기능을 위한 라우팅 구현
     /function : 서버의 주요 단위 로직을 구현
+        image_test.py : 이미지 기반 분석 기능 구현
         langchain.py : GPT API 사용 및 랭체인의 기능을 구현
+        marking.py : 채점 기능 구현
         ocr.py : Google Vision OCR 기능을 구현
-        pdf_processing.py : PDF 파일 생성 기능을 구현
         prompt.py : GPT API 사용 시 정의하는 프롬프트를 구현
     /main : 학습자료 기반 문제 생성을 위한 라우팅 구현
         generate_problem.py : 문제 생성시 필요한 로직을 통합한 함수 구현
@@ -82,40 +86,30 @@ pip install Pillow
 ```
 
 
-4. pdfkit : HTML을 PDF로 변환하기 위한 라이브러리
-```
-pip install pdfkit
-```
-pdfkit을 사용하기 위해 wkhtmltopdf를 설치해야 함.
-- window : <https://wkhtmltopdf.org/downloads.html>에서 설치파일 다운로드 및 실행, notion의 pdfkit 페이지를 참고.
-- macOS : homebrew로 설치, 'brew install wkhtmltopdf'
-- linux : <https://velog.io/@agust15/파이썬-wkhtmltopdf-설치하기centOS> 참고
-
-
-5. google-cloud-vision : Google Cloud Vision API 클라이언트 라이브러리로, 이미지 분석을 위한 라이브러리
+4. google-cloud-vision : Google Cloud Vision API 클라이언트 라이브러리로, 이미지 분석을 위한 라이브러리
 ```
 pip install google-cloud-vision
 ```
 - 키파일 필요(깃에는 커밋하지 않았음)
 
 
-6. pdf2image : PDF를 이미지로 변환하기 위한 라이브러리
+5. pdf2image : PDF를 이미지로 변환하기 위한 라이브러리
 ```
 pip install pdf2image
 ```
 poppler기반 라이브러리이므로 설치 필요 <https://wooiljeong.github.io/python/pdf-to-image/> 참조
 
-7. openai : OpenAI의 API를 사용하기 위한 클라이언트 라이브러리
+6. openai : OpenAI의 API를 사용하기 위한 클라이언트 라이브러리
 ```
 pip install openai
 ```
 
-8. unstructured : 텍스트, 이미지, PDF 파일 등 다양한 형태의 비정형 데이터를 분석하고 처리하는 라이브러리
+7. unstructured : 텍스트, 이미지, PDF 파일 등 다양한 형태의 비정형 데이터를 분석하고 처리하는 라이브러리
 ```
 pip install unstructured
 ```
 
-9. langchain : llm 모델을 사용하기 용이하게 해주는 라이브러리
+8. langchain : llm 모델을 사용하기 용이하게 해주는 라이브러리
 ```
 pip install langchain
 ```
