@@ -1,8 +1,10 @@
 from . import main
 from flask import request, jsonify
 from ..function.marking import feedback_main
+from ..function.firebase_auth import token_required
 
 @main.route('/', methods = ['POST'])
+@token_required
 def feedback():
     """
     POST /feeadback/

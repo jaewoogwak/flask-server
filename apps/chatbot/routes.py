@@ -1,3 +1,4 @@
+from ..function.firebase_auth import token_required
 from . import main
 from flask import Flask, request, jsonify
 from ..function.ocr import OCR_image_byte
@@ -12,6 +13,7 @@ retriever = None
 # 테스트 용도, 기존 /upload 에 정의된 기능들 중간에 들어갈 내용
 # TODO: front-end에 사용되지 않으므로 확인 후 배포시에 해당 코드 주석처리
 @main.route('/generate', methods=['POST'])
+@token_required
 def generate_vectorDB():
     if 'file' not in request.files:
         return 'No file part', 400
@@ -31,6 +33,7 @@ def generate_vectorDB():
 
 # TODO: /generate 함수 주석처리 및 사용자별 retriever 설정 이후 함수 내용 변경
 @main.route('/question-answer', methods=['POST'])
+@token_required
 def answer_question():
     """
     POST /chatbot/question-answer

@@ -5,12 +5,14 @@ from ..function.ocr import OCR_image_byte, OCR_images_byte, OCR_PDF
 from .generate_problem import generate
 from ..function.image_test import image_to_openai_response, images_to_openai_responses, PDF_to_openai_responses
 import json
+from ..function.firebase_auth import token_required
 
 # TODO: 단일 이미지(/image)/다중 이미지(/images) 처리 통합, 기능적으로 동일
 # /image routing으로 통일, 이후 해당 코드에 대한 주석 추가
 
 # 단일 이미지 처리
 @main.route('/image', methods=['POST'])
+@token_required
 def upload_image():
     """
     단일 이미지를 처리할 엔드포인트
@@ -43,6 +45,7 @@ def upload_image():
 
 # 이미지 여러 장 처리
 @main.route('/images', methods=['POST'])
+@token_required
 def upload_images():
     """
     여러 이미지를 처리할 엔드포인트
@@ -75,6 +78,7 @@ def upload_images():
     return jsonify(result), 200
 
 @main.route('/pdf', methods=['POST'])
+@token_required
 def upload_PDF():
     """
     POST /upload/pdf
