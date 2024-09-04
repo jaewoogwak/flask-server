@@ -1,0 +1,14 @@
+# Ignore Git repository files
+.git
+.gitignore
+
+# Ignore environment files
+*.env
+
+# Ignore Vectordb cache files
+.cache/*
+
+# Ignore Python bytecode files
+**/*.pyc
+**/*.pyo
+**/__pycache__
