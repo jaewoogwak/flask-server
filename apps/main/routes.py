@@ -120,7 +120,6 @@ def upload_PDF():
             - {"error": "No examSetting found in the form data"}: 폼 데이터에 'examSetting'이 없는 경우.
             - {"error": "Invalid JSON format in examSetting"}: 'examSetting'이 유효한 JSON 형식이 아닌 경우.
     """
-    
     # 요청에서 'file'이 포함되어 있는지 확인
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
