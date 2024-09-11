@@ -17,14 +17,14 @@ def generate(text: str, options: Dict[str, Any] = None) -> List[Dict[str, Any]]:
         List[Dict[str, Any]]: 생성된 문제와 관련 데이터의 리스트
     """
     # 사용자의 학습자료를 기반으로 vectordb 생성
-    routes.retriever = embedding(text)
+    embedding(text)
 
     # 텍스트를 한 덩어리로 처리, 사용자 커스텀 프롬프트 정보 전달
     result = request_prompt(text, options)
     result_str = json.dumps(result, ensure_ascii=False)
     
     # 생성한 문제도 vectordb에 추가
-    routes.retriever = embedding(result_str)
+    embedding(result_str)
     # 결과를 저장할 리스트 초기화
     quiz_data = []
 
