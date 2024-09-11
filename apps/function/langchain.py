@@ -17,6 +17,13 @@ from langchain.schema import (
 )
 from config import KEY
 import os
+from redis import Redis
+import pickle
+from ..function.firebase_auth import get_uid
+
+
+# Redis 클라이언트 설정 (retriever 저장용)
+redis_client = Redis(host='localhost', port=6379, db=1)
 
 def request_prompt(contents, options=None):
     if options is None:
@@ -114,9 +121,11 @@ def request_prompt_img_detecting(contents, options=None):
 
 # 유저의 입력을 벡터화시키는 함수
 def embedding(user_input):
-    
+    # get_uid() 함수를 통해 사용자 ID 가져오기
+    user_id = get_uid()
+
     # 파일 경로 설정
-    file_path = "./.cache/files/test.txt"
+    file_path = f"./.cache/files/{user_id}.txt"
     directory = os.path.dirname(file_path)
 
     # 디렉토리가 존재하지 않는 경우 생성
@@ -139,17 +148,24 @@ def embedding(user_input):
     docs = loader.load_and_split(text_splitter=splitter)
 
     # cache에서 임베딩(벡터화한 데이터) 가져오기
-    cache_dir = LocalFileStore(f"./.cache/embeddings/test.txt")
+    cached_embeddings = get_cached_embeddings(user_id)
+
+    # 주어진 문서에 대한 Vector 생성
+    Chroma.from_documents(docs, cached_embeddings)
+
+    # redis에 user별로 docs 저장
+    redis_client.set(user_id, pickle.dumps(docs), ex=3600)  # 1시간 TTL 설정
+    
+def get_cached_embeddings(user_id):
+    """
+    캐시 저장소와 OpenAI 임베딩 객체를 설정하는 함수
+    """
+    # cache에서 임베딩(벡터화한 데이터) 가져오기
+    cache_dir = LocalFileStore(f"./.cache/embeddings/{user_id}.txt")
     embeddings = OpenAIEmbeddings(openai_api_key=KEY)
     cached_embeddings = CacheBackedEmbeddings.from_bytes_store(embeddings, cache_dir)
 
-    # 주어진 문서에 대한 Vector 생성
-    vectorstore = Chroma.from_documents(docs, cached_embeddings)
-
-
-    retriever = vectorstore.as_retriever()
-
-    return retriever
+    return cached_embeddings
 
 # 줄 관리 함수
 def format_docs(docs):
