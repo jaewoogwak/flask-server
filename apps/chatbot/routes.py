@@ -1,37 +1,11 @@
-from ..function.firebase_auth import token_required
+from ..function.firebase_auth import token_required, get_uid
 from . import main
-from flask import Flask, request, jsonify
-from ..function.ocr import OCR_image_byte
-from ..function.langchain import embedding, search_answer
+from flask import request, jsonify
+from ..function.langchain import search_answer, redis_client, get_cached_embeddings
+from langchain.vectorstores import Chroma
+import pickle
 
 # retriever를 통해 vectordb를 생성하고 vectordb기반 질문응답이 가능함
-# 일단 편리를 위해 전역변수로 설정하나 추후 필요시 수정이 필요함
-# TODO: 사용자를 구분하여 retriever 기능을 구현하도록 변경
-retriever = None
-
-# 학습자료(단일 이미지) 기반의 vectorDB 생성
-# 테스트 용도, 기존 /upload 에 정의된 기능들 중간에 들어갈 내용
-# TODO: front-end에 사용되지 않으므로 확인 후 배포시에 해당 코드 주석처리
-@main.route('/generate', methods=['POST'])
-@token_required
-def generate_vectorDB():
-    if 'file' not in request.files:
-        return 'No file part', 400
-    
-    file = request.files['file']
-    if file.filename == '':
-        return 'No selected file', 400
-    
-    if file:
-        # 이미지 파일의 내용을 읽음
-        image_content = file.read()
-        text = OCR_image_byte(image_content)
-        
-        global retriever
-        retriever = embedding(text)
-        return jsonify({"result" : "success"})
-
-# TODO: /generate 함수 주석처리 및 사용자별 retriever 설정 이후 함수 내용 변경
 @main.route('/question-answer', methods=['POST'])
 @token_required
 def answer_question():
@@ -54,7 +28,22 @@ def answer_question():
     Exceptions:
     """
     
-    # retriever가 None이 아닌, 한 번이라도 vectordb를 생성한 경우
+    # get_uid() 함수를 통해 사용자 ID 가져오기
+    user_id = get_uid()
+    
+    # redis에 올라가 있는 docs 반환
+    docs_pickled = redis_client.get(user_id)
+
+    # 문서 역직렬화
+    docs = pickle.loads(docs_pickled)
+
+    # 벡터 데이터의 경로
+    embedded_path = f"./.cache/embeddings/{user_id}.txt"
+
+    # 벡터스토어 로드 이후 retriever 생성
+    vectorstore = Chroma.from_documents(docs, get_cached_embeddings(user_id), persist_directory=embedded_path)
+    retriever = vectorstore.as_retriever()
+
     if retriever is not None:
         question_data = request.json
         # json body의 "question"을 읽어옴
