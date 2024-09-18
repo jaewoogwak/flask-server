@@ -34,6 +34,9 @@ def answer_question():
     # redis에 올라가 있는 docs 반환
     docs_pickled = redis_client.get(user_id)
 
+    if docs_pickled is None:
+        return jsonify({"answer": "No documents found in cache. Please upload documents first."}), 400
+
     # 문서 역직렬화
     docs = pickle.loads(docs_pickled)
 
