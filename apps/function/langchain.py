@@ -23,7 +23,7 @@ from ..function.firebase_auth import get_uid
 
 
 # Redis 클라이언트 설정 (retriever 저장용)
-redis_client = Redis(host='localhost', port=6379, db=1)
+redis_client = Redis(host='host.docker.internal', port=6379, db=1)
 
 def request_prompt(contents, options=None):
     if options is None:
