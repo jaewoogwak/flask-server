@@ -12,3 +12,6 @@
 **/*.pyc
 **/*.pyo
 **/__pycache__
+
+# docker-compose.yml
+docker-compose.yml
