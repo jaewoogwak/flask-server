@@ -10,7 +10,7 @@ import os
 smtp_username = os.environ.get('SMTP_USERNAME')
 smtp_password = os.environ.get('SMTP_PASSWORD')
 
-redis_client_auth = Redis(host='host.docker.internal', port=6379, db=2)
+redis_client_auth = Redis(host='redis', port=6379, db=2)
 
 # mail로 인증번호를 보내는 로직
 @main.route('/mail', methods=['POST'])
