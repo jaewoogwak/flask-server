@@ -1,0 +1,27 @@
+version: '3'
+services:
+  flask-app:
+    image: gon0519/flask-app:1.0.23
+    container_name: flask-server  # 컨테이너 이름 설정
+    ports:
+      - "10001:5000"  # 호스트의 10001 포트를 컨테이너의 5000 포트로 매핑
+    restart: always  # 컨테이너가 종료되면 항상 재시작
+    depends_on:
+      - redis  # Flask 컨테이너가 Redis 컨테이너에 의존
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+    networks:
+      - app-network
+
+  redis:
+    image: "redis:latest"  # 최신 Redis 이미지를 사용
+    ports:
+      - "6379:6379"  # Redis를 호스트의 6379 포트로 노출
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge  # 컨테이너 간 통신을 위한 브리지 네트워크
