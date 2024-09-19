@@ -13,7 +13,7 @@ smtp_password = os.environ.get('SMTP_PASSWORD')
 redis_client_auth = Redis(host='redis', port=6379, db=2)
 
 # mail로 인증번호를 보내는 로직
-@main.route('/mail', methods=['POST'])
+@main.route('/email', methods=['POST'])
 #@token_required
 def mail():
     # request body로부터 email parsing
@@ -65,7 +65,7 @@ def num():
     # request body에서 email과 auth code parsing
     data = request.get_json()
     email = data.get('email')
-    user_code = data.get('code')
+    user_code = data.get('authnum')
     
     if not email or not user_code:
         return jsonify({'message': 'Not enter email or verification code'}), 400
