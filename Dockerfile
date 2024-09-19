@@ -19,4 +19,4 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 컨테이너 실행 시 실행될 명령어
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--workers=4"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app", "--workers=4", "--timeout", "120"]
