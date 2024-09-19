@@ -11,6 +11,7 @@ from flask_cors import CORS
 from apps.main import main as main_blueprint
 from apps.chatbot import main as chatbot_blueprint
 from apps.feedback import main as feedback_blueprint
+from apps.auth import main as auth_blueprint
 
 # Flask application instance를 생성
 app = Flask(__name__)
@@ -25,6 +26,7 @@ CORS(app)
 app.register_blueprint(main_blueprint, url_prefix = '/upload')
 app.register_blueprint(chatbot_blueprint, url_prefix = '/chatbot')
 app.register_blueprint(feedback_blueprint, url_prefix = '/feedback')
+app.register_blueprint(auth_blueprint, url_prefix = '/auth')
 
 # flask가 요청을 받을 IP, 0.0.0.0으로 설정함으로서 모든 네트워크 주소에서 요청을 받도록 설정
 address = '0.0.0.0'
