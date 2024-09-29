@@ -3,7 +3,7 @@
 # config.py에 선언한 환경변수를 사용
 from config import *
 # flask framework 사용
-from flask import Flask
+from flask import Flask, jsonify
 # CORS(Cross-Origin Resource Sharing) 설정을 위한 확장 라이브러리
 from flask_cors import CORS
 # main, chatbot, feedback의 폴더를 각각 라우팅 단위로 관리
@@ -31,8 +31,12 @@ app.register_blueprint(auth_blueprint, url_prefix = '/auth')
 # flask가 요청을 받을 IP, 0.0.0.0으로 설정함으로서 모든 네트워크 주소에서 요청을 받도록 설정
 address = '0.0.0.0'
 
+@app.route('/', methods=['POST'])
+def health():
+    return jsonify({}), 200
+
 if __name__ == '__main__':
     # Flask application 실행
     # 5000 port, debug=true(코드 변경시 자동 재시작) 설정
     # TODO: 배포 시 debug=False로 설정
-    app.run(debug=True, host=address, port=5000)
+    app.run(debug=True, host=address, port=5001)
