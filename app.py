@@ -31,12 +31,12 @@ app.register_blueprint(auth_blueprint, url_prefix = '/auth')
 # flask가 요청을 받을 IP, 0.0.0.0으로 설정함으로서 모든 네트워크 주소에서 요청을 받도록 설정
 address = '0.0.0.0'
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET'])
 def health():
-    return jsonify({}), 200
+    return "good", 200
 
 if __name__ == '__main__':
     # Flask application 실행
     # 5000 port, debug=true(코드 변경시 자동 재시작) 설정
     # TODO: 배포 시 debug=False로 설정
-    app.run(debug=True, host=address, port=5001)
+    app.run(debug=True, host=address, port=5000)
