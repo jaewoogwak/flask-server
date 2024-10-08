@@ -1,7 +1,7 @@
 version: '3'
 services:
   flask-app:
-    image: gon0519/flask-app:1.0.28
+    image: gon0519/flask-app:1.0.29
     container_name: flask-server  # 컨테이너 이름 설정
     ports:
       - "10001:5000"  # 호스트의 10001 포트를 컨테이너의 5000 포트로 매핑

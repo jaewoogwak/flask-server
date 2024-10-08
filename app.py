@@ -1,5 +1,3 @@
-# app.py: flask project 시작 파일
-
 # config.py에 선언한 환경변수를 사용
 from config import *
 # flask framework 사용
@@ -12,31 +10,26 @@ from apps.main import main as main_blueprint
 from apps.chatbot import main as chatbot_blueprint
 from apps.feedback import main as feedback_blueprint
 from apps.auth import main as auth_blueprint
+# WSGI to ASGI 변환을 위한 미들웨어
+from asgiref.wsgi import WsgiToAsgi
 
 # Flask application instance를 생성
 app = Flask(__name__)
 # CORS 설정을 통해 다른 도메인(주소)의 접속을 허용
 # TODO: Front-end에서만 접속 허용하도록 설정 추가 필요
-
 CORS(app)
 
 # Blueprint를 등록하여 URL의 라우팅을 관리
-# main_blueprint, chatbot_blueprint, feedback_blueprint의 시작 라우팅 주소를 각각
-# /upload, /chatbot, /feedback으로 설정
 app.register_blueprint(main_blueprint, url_prefix = '/upload')
 app.register_blueprint(chatbot_blueprint, url_prefix = '/chatbot')
 app.register_blueprint(feedback_blueprint, url_prefix = '/feedback')
 app.register_blueprint(auth_blueprint, url_prefix = '/auth')
 
-# flask가 요청을 받을 IP, 0.0.0.0으로 설정함으로서 모든 네트워크 주소에서 요청을 받도록 설정
-address = '0.0.0.0'
-
 @app.route('/', methods=['GET'])
 def health():
     return "good", 200
 
-if __name__ == '__main__':
-    # Flask application 실행
-    # 5000 port, debug=true(코드 변경시 자동 재시작) 설정
-    # TODO: 배포 시 debug=False로 설정
-    app.run(debug=True, host=address, port=5000)
+# WSGI를 ASGI로 변환
+asgi_app = WsgiToAsgi(app)
+
+# main 함수 제거, Uvicorn을 통해 실행하도록 변경
