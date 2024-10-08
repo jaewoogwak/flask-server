@@ -19,4 +19,4 @@ COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 컨테이너 실행 시 실행될 명령어
-CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:5000", "app:asgi_app", "--timeout", "120"]
+CMD ["gunicorn", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:5000", "app:asgi_app", "--timeout", "120"]
