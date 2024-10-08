@@ -12,6 +12,8 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - SMTP_USERNAME=${SMTP_USERNAME}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - EFS_FSID=${EFS_FSID}
+      - REDIS_ENDPOINT=${REDIS_ENDPOINT}
     volumes:
       - /mnt/efs/:/app/.cache  # EFS를 컨테이너의 .cache 디렉토리로 마운트
     networks:
