@@ -1,7 +1,7 @@
 from ..function.firebase_auth import token_required
+from ..models import redis_client_auth
 from . import main
 from flask import request, jsonify
-from redis import Redis
 import smtplib
 from email.mime.text import MIMEText
 import random
@@ -9,8 +9,6 @@ import os
 
 smtp_username = os.environ.get('SMTP_USERNAME')
 smtp_password = os.environ.get('SMTP_PASSWORD')
-
-redis_client_auth = Redis(host='redis', port=6379, db=2)
 
 # mail로 인증번호를 보내는 로직
 @main.route('/email', methods=['POST'])
