@@ -11,14 +11,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-nanum \
     && rm -rf /var/lib/apt/lists/*
 
-# NLTK 리소스 설치
-RUN python -m nltk.downloader punkt
-
 # 현재 디렉토리의 내용을 컨테이너의 작업 디렉토리로 복사
 COPY . /app
 
 # Python 의존성 설치
 RUN pip install --no-cache-dir -r requirements.txt
 
+# NLTK 리소스 설치
+RUN python -m nltk.downloader punkt
+
 # 컨테이너 실행 시 실행될 명령어
-CMD ["gunicorn", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:5000", "app:asgi_app", "--timeout", "120"]
+CMD ["gunicorn", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:10001", "app:asgi_app", "--timeout", "120"]
