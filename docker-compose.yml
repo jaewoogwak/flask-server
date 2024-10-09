@@ -1,11 +1,10 @@
 version: '3'
 services:
   flask-app:
-    image: gon0519/flask-app:1.0.32
+    image: gon0519/flask-app:1.0.34
     container_name: flask-server  # 컨테이너 이름 설정
-    ports:
-      - "10001:5000"  # 호스트의 10001 포트를 컨테이너의 5000 포트로 매핑
     restart: always  # 컨테이너가 종료되면 항상 재시작
+    network_mode: host  # 호스트 네트워크 모드 사용
     # depends_on:
     #   - redis  # Flask 컨테이너가 Redis 컨테이너에 의존
     environment:
