@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-nanum \
     && rm -rf /var/lib/apt/lists/*
 
+# NLTK 리소스 설치
+RUN python -m nltk.downloader punkt
 
 # 현재 디렉토리의 내용을 컨테이너의 작업 디렉토리로 복사
 COPY . /app
