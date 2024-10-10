@@ -16,8 +16,7 @@ from asgiref.wsgi import WsgiToAsgi
 # Flask application instance를 생성
 app = Flask(__name__)
 # CORS 설정을 통해 다른 도메인(주소)의 접속을 허용
-# TODO: Front-end에서만 접속 허용하도록 설정 추가 필요
-CORS(app)
+CORS(app, resources={r"/*": {"origins":"*"}})
 
 # Blueprint를 등록하여 URL의 라우팅을 관리
 app.register_blueprint(main_blueprint, url_prefix = '/upload')
