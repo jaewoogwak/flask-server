@@ -1,7 +1,7 @@
 version: '3'
 services:
   flask-app:
-    image: gon0519/flask-app:1.0.35
+    image: gon0519/flask-app:1.0.36
     container_name: flask-server  # 컨테이너 이름 설정
     restart: always  # 컨테이너가 종료되면 항상 재시작
     network_mode: host  # 호스트 네트워크 모드 사용
