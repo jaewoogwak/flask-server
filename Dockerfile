@@ -21,4 +21,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN python -m nltk.downloader punkt
 
 # 컨테이너 실행 시 실행될 명령어
-CMD ["gunicorn", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:10001", "app:asgi_app", "--timeout", "120"]
+CMD ["gunicorn", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:10001", "app:asgi_app", "--timeout", "120", "--access-logfile", "-"]
