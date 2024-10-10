@@ -2,18 +2,28 @@ import os
 from redis import Redis
 
 # 환경 변수에서 REDIS_ENDPOINT 값 불러오기
-redis_host = os.getenv('REDIS_ENDPOINT')
+# 리더(READER) 엔드포인트는 읽기 전용 엔드포인트
+redis_host_reader = os.getenv('REDIS_ENDPOINT_READER')
+# 기본(PRIMARY) 엔드포인트는 쓰기 전용 엔드포인트
+redis_host_primary = os.getenv('REDIS_ENDPOINT_PRIMARY')
 
-# Redis 클라이언트 설정 (retriever 저장용)
+# Redis 클라이언트 설정, retriever 저장용
 redis_client_retriever = Redis(
-    host=redis_host,
+    host=redis_host_primary,
     port=6379,
     db=0
 )
 
-# Redis 클라이언트 설정 (학교메일 인증코드 저장용)
-redis_client_auth = Redis(
-    host=redis_host,
+# Redis 클라이언트 설정, 학교메일 인증코드 저장용
+redis_client_auth_reader = Redis(
+    host=redis_host_reader,
+    port=6379,
+    db=1
+)
+
+# Redis 클라이언트 설정, 학교메일 인증코드 삭제용
+redis_client_auth_primary = Redis(
+    host=redis_host_primary,
     port=6379,
     db=1
 )

@@ -1,5 +1,5 @@
 from ..function.firebase_auth import token_required
-from ..models import redis_client_auth
+from ..models import redis_client_auth_reader, redis_client_auth_primary
 from . import main
 from flask import request, jsonify
 import smtplib
@@ -27,7 +27,7 @@ def mail():
 
     # redis db에 email-code로 저장
     # TTL을 5분(300초)로 설정
-    redis_client_auth.setex(email, 300, code)
+    redis_client_auth_primary.setex(email, 300, code)
 
     # SMTP 서버 설정, google smtp server 사용
     # smtp port 587 사용
@@ -73,7 +73,7 @@ def num():
     # 1. 이전에 인증 메일을 보내지 않은 경우
     # 2. ttl을 넘겨 접근하려고 한 경우
     # 3. 이미 인증을 한 후 데이터가 삭제된 경우
-    stored_code = redis_client_auth.get(email)
+    stored_code = redis_client_auth_reader.get(email)
 
     if not stored_code:
         return jsonify({'message': 'Email with expired or invalid credentials'}), 400
@@ -86,7 +86,7 @@ def num():
         return jsonify({'message': 'Mismatched credentials'}), 400
 
     # redis db에서 인증 정보 삭제
-    redis_client_auth.delete(email)
+    redis_client_auth_primary.delete(email)
     
     # 인증 코드 확인 로직이 잘 동작했다면 200(status-code) 반환
     return jsonify({'message': 'Verification is complete'}), 200
