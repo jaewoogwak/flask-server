@@ -5,14 +5,16 @@ services:
     container_name: flask-server  # 컨테이너 이름 설정
     restart: always  # 컨테이너가 종료되면 항상 재시작
     network_mode: host  # 호스트 네트워크 모드 사용
+    dns:
+      - 8.8.8.8
     # depends_on:
     #   - redis  # Flask 컨테이너가 Redis 컨테이너에 의존
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - SMTP_USERNAME=${SMTP_USERNAME}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
-      - EFS_FSID=${EFS_FSID}
-      - REDIS_ENDPOINT=${REDIS_ENDPOINT}
+      - REDIS_READER_ENDPOINT=${REDIS_READER_ENDPOINT}
+      - REDIS_PRIMARY_ENDPOINT=${REDIS_PRIMARY_ENDPOINT}
     volumes:
       - /mnt/efs/:/app/.cache  # EFS를 컨테이너의 .cache 디렉토리로 마운트
     # networks:
