@@ -19,7 +19,7 @@ from config import KEY
 import os
 import pickle
 from ..function.firebase_auth import get_uid
-from ..models import redis_client_retriever as redis_client
+from ..models import redis_client_retriever_primary as redis_client
 
 def request_prompt(contents, options=None):
     if options is None:
