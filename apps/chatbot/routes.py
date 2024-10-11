@@ -1,7 +1,8 @@
 from ..function.firebase_auth import token_required, get_uid
 from . import main
 from flask import request, jsonify
-from ..function.langchain import search_answer, redis_client, get_cached_embeddings
+from ..function.langchain import search_answer, get_cached_embeddings
+from ..models import redis_client_retriever_reader
 from langchain.vectorstores import Chroma
 import pickle
 
@@ -32,7 +33,7 @@ def answer_question():
     user_id = get_uid()
     
     # redis에 올라가 있는 docs 반환
-    docs_pickled = redis_client.get(user_id)
+    docs_pickled = redis_client_retriever_reader.get(user_id)
 
     if docs_pickled is None:
         return jsonify({"answer": "No documents found in cache. Please upload documents first."}), 400
